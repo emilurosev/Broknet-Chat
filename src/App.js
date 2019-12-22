@@ -6,7 +6,6 @@ import SignUp from './SignUp/SignUp';
 import DashBoard from './DashBoard/DashBoard';
 import News from './News/News';
 import HomePage from './HomePage/HomePage';
-import Paper from '@material-ui/core/Paper'
 
 const firebase = require('firebase');
 
@@ -38,8 +37,7 @@ class App extends React.Component {
 
         const routing = (  
           <Router>
-            <MainAppBar loggedIn={this.state.loggedIn} showEmail={this.state.email?this.state.email:''} signOutFn={this.signOut}></MainAppBar>
-          
+            <MainAppBar loggedIn={this.state.loggedIn} email={this.state.email} signOutFn={this.signOut}></MainAppBar> 
                 <Route path='/' exact component={HomePage}></Route>
                 <Route path='/signup' exact component={SignUp}></Route>
                 <Route path='/dashboard' exact component={DashBoard}></Route>

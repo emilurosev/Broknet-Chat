@@ -17,6 +17,7 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import RedditIcon from '@material-ui/icons/Reddit';
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
+import { Typography } from '@material-ui/core';
 
 
 export default class MainAppBar extends React.Component {
@@ -124,6 +125,11 @@ export default class MainAppBar extends React.Component {
               BrokNet Social Network
             </Button>
             <div style={{flex: '1 1 auto'}}></div>
+            {
+              this.props.loggedIn ?
+              <Typography style={{marginRight: '1rem'}}>You are logged in as {this.props.email}</Typography> :
+              null
+            }
             {
               this.props.loggedIn ?
               <Button onClick={this.props.signOutFn} color='inherit' >Sign Out</Button> :
