@@ -72,8 +72,18 @@ export default class MainAppBar extends React.Component {
                 <ListItemText primary={'Log In'}></ListItemText>
               </ListItem>
               <Divider></Divider>
+            </div>    
+          }
+          {
+            this.props.loggedIn ?
+            null :
+            <div>
+              <ListItem component={Link} to='/signup'>
+                <ListItemIcon><SupervisorAccountIcon></SupervisorAccountIcon></ListItemIcon>
+                <ListItemText primary={'Register'}></ListItemText>
+              </ListItem>
+              <Divider></Divider>
             </div>
-         
           }
           {
             this.props.loggedIn ?
@@ -89,11 +99,6 @@ export default class MainAppBar extends React.Component {
           <ListItem component={Link} to='/news'>
             <ListItemIcon><ViewComfyIcon></ViewComfyIcon></ListItemIcon>
             <ListItemText primary={'News'}></ListItemText>
-          </ListItem>
-          <Divider></Divider>
-          <ListItem component={Link} to='/signup'>
-            <ListItemIcon><SupervisorAccountIcon></SupervisorAccountIcon></ListItemIcon>
-            <ListItemText primary={'Register'}></ListItemText>
           </ListItem>
           <Divider></Divider>
         </List>
@@ -136,7 +141,4 @@ export default class MainAppBar extends React.Component {
     this.setState({[side]: open });
   };
 
-  
-
-  
 }
