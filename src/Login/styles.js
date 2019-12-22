@@ -30,7 +30,7 @@ const styles = theme => ({
     signUpLink: {
       width: '100%',
       textDecoration: 'none',
-      color: '#303f9f',
+      color: 'white',
       fontWeight: 'bolder'
     },
     errorText: {

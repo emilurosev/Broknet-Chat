@@ -49,7 +49,7 @@ class DashBoard extends React.Component {
                     <NewChat goToChatFn={this.goToChat} newChatSubmitFn={this.newChatSubmit}></NewChat> :
                     null
                 }
-                <Button className={classes.signOutBtn} onClick={this.signOut} color='secondary'>Sign Out</Button>
+                <Button className={classes.signOutBtn} onClick={this.signOut}>Sign Out</Button>
             </div>
         );
     }
