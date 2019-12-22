@@ -6,9 +6,7 @@ import SignUp from './SignUp/SignUp';
 import DashBoard from './DashBoard/DashBoard';
 import News from './News/News';
 import HomePage from './HomePage/HomePage';
-import {MuiThemeProvider, ThemeProvider} from '@material-ui/core/styles';
-import { theme } from './theme';
-import { CssBaseline } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper'
 
 const firebase = require('firebase');
 
@@ -41,11 +39,13 @@ class App extends React.Component {
         const routing = (  
           <Router>
             <MainAppBar loggedIn={this.state.loggedIn} showEmail={this.state.email?this.state.email:''} signOutFn={this.signOut}></MainAppBar>
-            <Route path='/' exact component={HomePage}></Route>
-            <Route path='/signup' exact component={SignUp}></Route>
-            <Route path='/dashboard' exact component={DashBoard}></Route>
-            <Route path='/login' exact component={Login}></Route>
-            <Route path='/news' exact component={News}></Route>     
+          
+                <Route path='/' exact component={HomePage}></Route>
+                <Route path='/signup' exact component={SignUp}></Route>
+                <Route path='/dashboard' exact component={DashBoard}></Route>
+                <Route path='/login' exact component={Login}></Route>
+                <Route path='/news' exact component={News}></Route> 
+    
           </Router>
           );
 

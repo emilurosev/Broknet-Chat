@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import RedditIcon from '@material-ui/icons/Reddit';
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
+import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 
 
 export default class MainAppBar extends React.Component {
@@ -63,6 +64,11 @@ export default class MainAppBar extends React.Component {
         onKeyDown={this.toggleDrawer(side, false)}
       >
         <List>
+          <ListItem component={Link} to='/'>
+            <ListItemIcon><HomeRoundedIcon></HomeRoundedIcon></ListItemIcon>
+            <ListItemText primary={'Home Page'}></ListItemText>
+          </ListItem>
+          <Divider></Divider>
           {
             this.props.loggedIn ?
             null :
