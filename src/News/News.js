@@ -71,16 +71,12 @@ class News extends React.Component {
         ));
       }
       else {
-        return <NewsCard item={this.state.article} />
+        return <div style={{textAlign: 'center'}}>{this.showButton()}<NewsCard item={this.state.article} /></div>
       }
     }
 
-    showButton() {
-      if(!this.state.showAll) {
-        return <Button variant="contained" color="secondary" onClick={this.showAll}>
-          Prikazi sve
-        </Button>
-      } 
+    showButton() { 
+      return <Button variant="contained" color="secondary" onClick={this.showAll}>Show All</Button>  
     }
   
     render() {
@@ -92,7 +88,6 @@ class News extends React.Component {
       } else {
         return (  
           <div>
-            {this.showButton()}
             {this.content()}  
           </div>   
         );

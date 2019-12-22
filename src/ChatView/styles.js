@@ -19,7 +19,7 @@ const styles = theme => ({
       boxSizing: 'border-box',
       wordWrap: 'break-word',
       marginTop: '10px',
-      backgroundColor: '#707BC4',
+      backgroundColor: '#009688',
       color: 'white',
       width: '300px',
       borderRadius: '10px'
@@ -32,7 +32,7 @@ const styles = theme => ({
       boxSizing: 'border-box',
       wordWrap: 'break-word',
       marginTop: '10px',
-      backgroundColor: '#707BC4',
+      backgroundColor: '#009688',
       color: 'white',
       width: '300px',
       borderRadius: '10px'
@@ -41,14 +41,15 @@ const styles = theme => ({
     chatHeader: {
       width: 'calc(100% - 301px)',
       height: '50px',
-      backgroundColor: '#344195',
-      position: 'fixed',
+      backgroundColor: '#4db6ac',
+      position: 'absolute',
       marginLeft: '301px',
       fontSize: '18px',
       textAlign: 'center',
       color: 'white',
       paddingTop: '10px',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      marginBottom: '30px'
     }
   
   });

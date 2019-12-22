@@ -49,7 +49,7 @@ class DashBoard extends React.Component {
                     <NewChat goToChatFn={this.goToChat} newChatSubmitFn={this.newChatSubmit}></NewChat> :
                     null
                 }
-                <Button className={classes.signOutBtn} onClick={this.signOut}>Sign Out</Button>
+                <Button className={classes.signOutBtn} onClick={this.signOut} color='secondary'>Sign Out</Button>
             </div>
         );
     }
@@ -102,6 +102,8 @@ class DashBoard extends React.Component {
     }
 
     goToChat = async (docKey, msg) => {
+        console.log(typeof docKey);
+        console.log(docKey)
         const usersInChat = docKey.split(':');
         const chat = this.state.chats.find(_chat => usersInChat.every(_user => _chat.users.includes(_user)));
         this.setState({ newChatFormVisible: false});

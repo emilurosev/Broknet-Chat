@@ -1,7 +1,7 @@
 const styles = theme => ({
 
     sendBtn: {
-      color: 'blue',
+      color: 'orange',
       cursor: 'pointer',
       '&:hover': {
         color: 'gray'
