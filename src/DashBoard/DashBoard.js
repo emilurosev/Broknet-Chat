@@ -97,7 +97,7 @@ class DashBoard extends React.Component {
                 .update({ receiverHasRead: true})
         }
         else {
-            console.log('akka');
+            //console.log('');
         }
     }
 

@@ -51,7 +51,7 @@ const styles = theme => ({
       boxSizing: 'border-box',
       marginBottom: '30px'
     }
-  
+    
   });
   
   export default styles;

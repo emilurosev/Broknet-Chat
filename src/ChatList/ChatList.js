@@ -32,7 +32,7 @@ class ChatList extends React.Component {
                                         <ListItem className={classes.listItem} 
                                             onClick={() => this.selectChat(_index)}
                                             selected={this.props.selectChatIndex === _index}
-                                            alignItem='flex-start'>
+                                            alignItems='flex-start'>
                                                 <ListItemAvatar>
                                                     <Avatar alt='Remy Sharp'>{_chat.users.filter(_user => _user !== this.props.userEmail)[0].split('')[0]}</Avatar>
                                                 </ListItemAvatar>
