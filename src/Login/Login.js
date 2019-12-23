@@ -76,7 +76,7 @@ class Login extends React.Component {
             .auth()
             .signInWithEmailAndPassword(this.state.email, this.state.password)
             .then(() => {
-                this.props.history.push('/dashboard')
+                this.props.history.push('/dashboard');
             }, err => {
                 this.setState({loginError: "Server error"});
                 console.log(err);
@@ -107,11 +107,9 @@ class Login extends React.Component {
                 .firestore()
                 .collection('users')
                 .doc(user.email)
-                .set(userObj)
-                .then(() => {
-                    this.props.history.push('/dashboard');
-                })
-
+                .set(userObj); 
+        }).then(() => {
+            this.props.history.push('/dashboard');
         }).catch(function(error) {
             console.log(error.message);
         });
