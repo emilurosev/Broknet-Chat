@@ -93,7 +93,7 @@ class SignUp extends React.Component {
                     .doc(this.state.email)
                     .set(userObj)
                     .then(() => {
-                        this.props.history.push('/dashboard')
+                        this.props.history.push('/dashboard');
                     })
             }, authError => {
                 console.log(authError);
