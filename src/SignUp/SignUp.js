@@ -65,7 +65,7 @@ class SignUp extends React.Component {
                         null
                     }
                     <Typography component='h5' variant='h6' className={classes.hasAccountHeader}>Already Have An Account?</Typography>
-                    <Link className={classes.logInLink} to='/login'>Log In!</Link>
+                    <Button component={Link} to='/login'>Log In</Button>
                 </Paper>
             </main>
         );
@@ -80,8 +80,8 @@ class SignUp extends React.Component {
             return;
         }
 
-        firebase.
-            auth()
+        firebase
+            .auth()
             .createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then(authRes => {
                 const userObj = {

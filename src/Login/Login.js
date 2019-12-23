@@ -58,7 +58,11 @@ class Login extends React.Component {
                     <Typography className={classes.noAccountHeader} component='h5' variant='h6'>
                         Don't Have Account?
                     </Typography>
-                    <Link to='signup' className={classes.signUpLink}>Sign Up!</Link>
+                    <Button component={Link} to='signup'>Sign Up</Button>
+                    <Typography component='h5' variant='h6'>
+                        OR
+                    </Typography>
+                    <Button onClick={this.loginWithGoogle}>Sign In With Google</Button>
                 </Paper>
             </main>
         );
@@ -90,6 +94,18 @@ class Login extends React.Component {
             default:
                 break;
         }
+    }
+
+    loginWithGoogle = () => {
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider).then(function(result) {
+            var user = result.user;
+            console.log(user);
+        }).catch(function(error) {
+            console.log(error.message);
+        }) 
+
+        
     }
 
 }
