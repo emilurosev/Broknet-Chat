@@ -87,6 +87,7 @@ class SignUp extends React.Component {
                 const userObj = {
                     email: authRes.user.email
                 };
+                authRes.user.sendEmailVerification();
                 firebase
                     .firestore()
                     .collection('users')

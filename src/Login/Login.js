@@ -75,6 +75,9 @@ class Login extends React.Component {
         firebase
             .auth()
             .signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then(res => {
+                console.log(res.user.emailVerified);
+            })
             .then(() => {
                 this.props.history.push('/dashboard');
             }, err => {
@@ -103,6 +106,10 @@ class Login extends React.Component {
             const userObj = {
                 email: user.email
             };
+            console.log(user.emailVerified);
+            if(!user.emailVerified) {
+                user.sendEmailVerification();
+            }
             firebase
                 .firestore()
                 .collection('users')
