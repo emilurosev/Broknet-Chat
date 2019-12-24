@@ -106,10 +106,6 @@ class Login extends React.Component {
             const userObj = {
                 email: user.email
             };
-            console.log(user.emailVerified);
-            if(!user.emailVerified) {
-                user.sendEmailVerification();
-            }
             firebase
                 .firestore()
                 .collection('users')

@@ -127,7 +127,7 @@ export default class MainAppBar extends React.Component {
             <div style={{flex: '1 1 auto'}}></div>
             {
               this.props.loggedIn ?
-              <Typography style={{marginRight: '1rem'}}>You are logged in as {this.props.email}</Typography> :
+            <Typography style={{marginRight: '1rem'}}>You are logged in as {this.props.email} {this.props.emailVerified ? null : "(EMAIL IS NOT VERIFIED!)"}</Typography> :
               null
             }
             {

@@ -6,8 +6,6 @@ import { Typography } from '@material-ui/core';
 import logo from '../b.svg';
 
 export default function HomePage() {
-    
-    console.log(logo);
 
     return(
 

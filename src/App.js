@@ -16,18 +16,19 @@ class App extends React.Component {
       super();
       this.state = {
         loggedIn: false,
-        email: ''
+        email: '',
+        emailVerified: false
       };
     }
 
     componentDidMount() {
       firebase.auth().onAuthStateChanged(async _usr => {
         if(!_usr) {
-          this.setState({loggedIn: false, email: ''})
+          this.setState({loggedIn: false, email: '', emailVerified: false})
         }
         else {
           await firebase
-            this.setState({loggedIn: true, email: _usr.email})
+            this.setState({loggedIn: true, email: _usr.email, emailVerified: _usr.emailVerified})
             console.log(this.state.email);
         }
       });
@@ -38,7 +39,7 @@ class App extends React.Component {
 
         const routing = (  
           <Router>
-            <MainAppBar loggedIn={this.state.loggedIn} email={this.state.email} signOutFn={this.signOut}></MainAppBar> 
+            <MainAppBar loggedIn={this.state.loggedIn} email={this.state.email} emailVerified={this.state.emailVerified} signOutFn={this.signOut}></MainAppBar> 
                 <Route path='/' exact component={HomePage}></Route>
                 <Route path='/signup' exact component={SignUp}></Route>
                 <Route path='/dashboard' exact component={DashBoard}></Route>
