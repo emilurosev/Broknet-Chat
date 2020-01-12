@@ -13,12 +13,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Link } from 'react-router-dom';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import RedditIcon from '@material-ui/icons/Reddit';
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import { Typography } from '@material-ui/core';
-
+import PeopleIcon from '@material-ui/icons/People';
+import AddCircle from '@material-ui/icons/AddCircle';
 
 export default class MainAppBar extends React.Component {
   
@@ -86,7 +86,7 @@ export default class MainAppBar extends React.Component {
             null :
             <div>
               <ListItem component={Link} to='/signup'>
-                <ListItemIcon><SupervisorAccountIcon></SupervisorAccountIcon></ListItemIcon>
+                <ListItemIcon><AddCircle></AddCircle></ListItemIcon>
                 <ListItemText primary={'Register'}></ListItemText>
               </ListItem>
               <Divider></Divider>
@@ -99,6 +99,17 @@ export default class MainAppBar extends React.Component {
                 <ListItemIcon><ChatBubble></ChatBubble></ListItemIcon>
                 <ListItemText primary={'Chat Dashboard'}></ListItemText>
               </ListItem> 
+              <Divider></Divider>
+            </div> :
+            null
+          }
+          {
+            this.props.loggedIn ?
+            <div>
+              <ListItem component={Link} to='/profile'>
+                <ListItemIcon><PeopleIcon></PeopleIcon></ListItemIcon>
+                <ListItemText primary={'My Profile'}></ListItemText>
+              </ListItem>
               <Divider></Divider>
             </div> :
             null

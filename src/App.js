@@ -6,6 +6,7 @@ import SignUp from './SignUp/SignUp';
 import DashBoard from './DashBoard/DashBoard';
 import News from './News/News';
 import HomePage from './HomePage/HomePage';
+import MyProfile from './MyProfile/MyProfile';
 
 const firebase = require('firebase');
 
@@ -45,7 +46,7 @@ class App extends React.Component {
                 <Route path='/dashboard' exact component={DashBoard}></Route>
                 <Route path='/login' exact component={Login}></Route>
                 <Route path='/news' exact component={News}></Route> 
-    
+                <Route path='/profile' exact component={MyProfile}></Route>
           </Router>
           );
 
