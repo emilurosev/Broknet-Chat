@@ -16,7 +16,6 @@ import { Link } from 'react-router-dom';
 import RedditIcon from '@material-ui/icons/Reddit';
 import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
-import { Typography } from '@material-ui/core';
 import PeopleIcon from '@material-ui/icons/People';
 import AddCircle from '@material-ui/icons/AddCircle';
 
@@ -136,11 +135,6 @@ export default class MainAppBar extends React.Component {
               BrokNet Social Network
             </Button>
             <div style={{flex: '1 1 auto'}}></div>
-            {
-              this.props.loggedIn ?
-            <Typography style={{marginRight: '1rem'}}>You are logged in as {this.props.email} {this.props.emailVerified ? null : "(EMAIL IS NOT VERIFIED!)"}</Typography> :
-              null
-            }
             {
               this.props.loggedIn ?
               <Button onClick={this.props.signOutFn} color='inherit' >Sign Out</Button> :

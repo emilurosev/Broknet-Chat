@@ -34,8 +34,8 @@ class MyProfile extends React.Component {
                     <Typography variant='h2'>{this.state.email}</Typography>
                     {
                         this.state.emailVerified ?
-                        <Typography variant="body2">Email is verified!</Typography> :
-                        <Typography variant='body2'>Email is NOT verified!</Typography>
+                        <Typography color='primary' variant="body2">Email is verified!</Typography> :
+                        <Typography color='error' variant='body2'>Email is NOT verified!</Typography>
                     }
                     <img style={{marginTop: '1rem'}} src={this.state.photo} alt='profile pic'></img>
                 </Paper>
