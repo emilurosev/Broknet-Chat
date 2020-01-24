@@ -1,8 +1,15 @@
 
 import React from 'react';
-import { FormControl, InputLabel, Input, Button, Paper, withStyles, CssBaseline, Typography } from '@material-ui/core';
+import { FormControl, InputLabel, Input, Button, Paper, withStyles, CssBaseline, Typography, Snackbar, makeStyles, Slide, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import styles from './styles';
+import MuiAlert from '@material-ui/lab/Alert';
+
 const firebase = require("firebase");
+
+function TransitionDown(props) {
+    return <Slide {...props} direction="down" />;
+}
 
 class NewChat extends React.Component {
 
@@ -10,7 +17,8 @@ class NewChat extends React.Component {
         super();
         this.state = {
             username: null,
-            message: null
+            message: null,
+            showUserDoesNotExistMsg: false
         };
     }
 
@@ -18,6 +26,7 @@ class NewChat extends React.Component {
     render() {
 
         const { classes } = this.props;
+
 
         return(
             <main className={classes.main}>
@@ -40,6 +49,20 @@ class NewChat extends React.Component {
                         <Button fullWidth variant='contained' color='primary' className={classes.submit} type='submit'>Send</Button>
                     </form>
                 </Paper>
+                <Snackbar
+                    open={this.state.showUserDoesNotExistMsg}
+                    onClose={this.handleClose}
+                    TransitionComponent={TransitionDown}
+                    message="User does not exist!"
+                    autoHideDuration={6000}
+                    action = {
+                        <React.Fragment>
+                            <IconButton size="small" aria-label="close" color="inherit" onClick={this.handleClose}>
+                                <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </React.Fragment>
+                    }
+                />
             </main>
         );
         
@@ -65,6 +88,10 @@ class NewChat extends React.Component {
         if(userExist) {
             const chatExists = await this.chatExists();
             chatExists ? this.goToChat() : this.createChat();
+            this.setState({showUserDoesNotExistMsg: false});
+        }
+        else {
+            this.setState({showUserDoesNotExistMsg: true});
         }
     }
 
@@ -105,6 +132,13 @@ class NewChat extends React.Component {
         //this.setState({ serverError: !exists});
         return exists;
     }
+
+    handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        this.setState({showUserDoesNotExistMsg: false});
+    };
 
 }
 
