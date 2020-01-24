@@ -71,7 +71,8 @@ class NewChat extends React.Component {
     createChat = () => {
         this.props.newChatSubmitFn({
             sendTo: this.state.username,
-            message: this.state.message
+            message: this.state.message,
+            timestamp: Date.now()
         });
     }
 
