@@ -20,7 +20,6 @@ class Login extends React.Component {
             email: null,
             password: null, 
             loginError: ''
-
         }
     }
 
@@ -67,6 +66,14 @@ class Login extends React.Component {
             </main>
         );
     
+    }
+
+    componentDidMount = () => {
+        firebase.auth().onAuthStateChanged(async _usr => {
+            if(_usr) {
+                this.props.history.push('/profile');
+            }
+        });
     }
 
     submitLogin = (e) => {
@@ -118,6 +125,7 @@ class Login extends React.Component {
         });
     }
 
+  
     
 
 }

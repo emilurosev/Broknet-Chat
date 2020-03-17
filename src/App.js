@@ -7,46 +7,26 @@ import DashBoard from './DashBoard/DashBoard';
 import News from './News/News';
 import HomePage from './HomePage/HomePage';
 import MyProfile from './MyProfile/MyProfile';
-
-const firebase = require('firebase');
-
+import Search from './Search/Search';
 
 class App extends React.Component {
 
     constructor() {
       super();
-      this.state = {
-        loggedIn: false,
-        email: '',
-        emailVerified: false
-      };
-    }
-
-    componentDidMount() {
-      firebase.auth().onAuthStateChanged(async _usr => {
-        if(!_usr) {
-          this.setState({loggedIn: false, email: '', emailVerified: false})
-        }
-        else {
-          await firebase
-            this.setState({loggedIn: true, email: _usr.email, emailVerified: _usr.emailVerified})
-            console.log(this.state.email);
-        }
-      });
-
+      this.state = {};
     }
 
     render() { 
-
         const routing = (  
           <Router>
-            <MainAppBar loggedIn={this.state.loggedIn} email={this.state.email} emailVerified={this.state.emailVerified} signOutFn={this.signOut}></MainAppBar> 
-                <Route path='/' exact component={HomePage}></Route>
-                <Route path='/signup' exact component={SignUp}></Route>
-                <Route path='/dashboard' exact component={DashBoard}></Route>
-                <Route path='/login' exact component={Login}></Route>
-                <Route path='/news' exact component={News}></Route> 
-                <Route path='/profile' exact component={MyProfile}></Route>
+            <MainAppBar></MainAppBar> 
+            <Route path='/' exact component={HomePage}></Route>
+            <Route path='/signup' exact component={SignUp}></Route>
+            <Route path='/dashboard' exact component={DashBoard}></Route>
+            <Route path='/login' exact component={Login} changeLoggedInStateFn={this.changeLoggedInState}></Route>
+            <Route path='/news' exact component={News}></Route> 
+            <Route path='/profile' exact component={MyProfile}></Route>
+            <Route path='/search' exact component={Search}></Route>
           </Router>
           );
 
@@ -55,12 +35,7 @@ class App extends React.Component {
             {routing}   
           </div>     
         );
-    }
-    
-    signOut = () => {
-      firebase.auth().signOut();
-      this.setState({loggedIn: false, email: ''})
-    }
+    } 
 
 }
 

@@ -148,7 +148,7 @@ class DashBoard extends React.Component {
                         console.log(this.state);
                     })
             }
-        })
+        });
     }
 
 }

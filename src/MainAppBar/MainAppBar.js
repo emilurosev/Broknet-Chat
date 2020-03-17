@@ -18,6 +18,10 @@ import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import PeopleIcon from '@material-ui/icons/People';
 import AddCircle from '@material-ui/icons/AddCircle';
+import Close from '@material-ui/icons/Close';
+import Search from '@material-ui/icons/Search';
+
+const firebase = require('firebase');
 
 export default class MainAppBar extends React.Component {
   
@@ -25,10 +29,28 @@ export default class MainAppBar extends React.Component {
     super();
     this.state = {
       left: false,
+      loggedIn: false
     };
   }
 
-  
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(async _usr => {
+      if(!_usr) {
+        this.setState({loggedIn: false})
+      }
+      else {
+        await firebase
+          this.setState({loggedIn: true})
+          console.log(this.state.email);
+      }
+    });
+
+  }
+
+  signOut = () => {
+    firebase.auth().signOut();
+    this.setState({loggedIn: false})
+  }
 
   render() {
     
@@ -64,16 +86,16 @@ export default class MainAppBar extends React.Component {
         onKeyDown={this.toggleDrawer(side, false)}
       >
         <List>
-          <ListItem component={Link} to='/'>
+          <ListItem button component={Link} to='/'>
             <ListItemIcon><HomeRoundedIcon></HomeRoundedIcon></ListItemIcon>
             <ListItemText primary={'Home Page'}></ListItemText>
           </ListItem>
           <Divider></Divider>
           {
-            this.props.loggedIn ?
+            this.state.loggedIn ?
             null :
             <div>
-              <ListItem component={Link} to='/login'>
+              <ListItem button component={Link} to='/login'>
                 <ListItemIcon><RedditIcon></RedditIcon></ListItemIcon>
                 <ListItemText primary={'Log In'}></ListItemText>
               </ListItem>
@@ -81,10 +103,10 @@ export default class MainAppBar extends React.Component {
             </div>    
           }
           {
-            this.props.loggedIn ?
+            this.state.loggedIn ?
             null :
             <div>
-              <ListItem component={Link} to='/signup'>
+              <ListItem button component={Link} to='/signup'>
                 <ListItemIcon><AddCircle></AddCircle></ListItemIcon>
                 <ListItemText primary={'Register'}></ListItemText>
               </ListItem>
@@ -92,9 +114,9 @@ export default class MainAppBar extends React.Component {
             </div>
           }
           {
-            this.props.loggedIn ?
+            this.state.loggedIn ?
             <div>
-              <ListItem component={Link} to='/dashboard'>
+              <ListItem button component={Link} to='/dashboard'>
                 <ListItemIcon><ChatBubble></ChatBubble></ListItemIcon>
                 <ListItemText primary={'Chat Dashboard'}></ListItemText>
               </ListItem> 
@@ -103,9 +125,9 @@ export default class MainAppBar extends React.Component {
             null
           }
           {
-            this.props.loggedIn ?
+            this.state.loggedIn ?
             <div>
-              <ListItem component={Link} to='/profile'>
+              <ListItem button component={Link} to='/profile'>
                 <ListItemIcon><PeopleIcon></PeopleIcon></ListItemIcon>
                 <ListItemText primary={'My Profile'}></ListItemText>
               </ListItem>
@@ -113,11 +135,33 @@ export default class MainAppBar extends React.Component {
             </div> :
             null
           }
-          <ListItem component={Link} to='/news'>
+          {
+            this.state.loggedIn ?
+            <div>
+              <ListItem button component={Link} to='/search'>
+                <ListItemIcon><Search></Search></ListItemIcon>
+                <ListItemText primary={'Search'}></ListItemText>
+              </ListItem>
+              <Divider></Divider>
+            </div> :
+            null
+          }
+          <ListItem button component={Link} to='/news'>
             <ListItemIcon><ViewComfyIcon></ViewComfyIcon></ListItemIcon>
             <ListItemText primary={'News'}></ListItemText>
           </ListItem>
           <Divider></Divider>
+          {
+            this.state.loggedIn ?
+            <div>
+              <ListItem button onClick={this.signOut}>
+                <ListItemIcon><Close></Close></ListItemIcon>
+                <ListItemText primary={'Log out'}></ListItemText>
+              </ListItem>
+              <Divider></Divider>
+            </div> :
+            null
+          }
         </List>
       </div>
     );
@@ -131,15 +175,10 @@ export default class MainAppBar extends React.Component {
             <IconButton onClick={this.toggleDrawer('left', true)} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton>
-            <Button color='inherit' className={classes.title} component={Link} to='/'>
+            <Button color='inherit' className={classes.title} component={Link} style={{textTransform: 'none'}} to='/'>
               BrokNet Social Network
             </Button>
             <div style={{flex: '1 1 auto'}}></div>
-            {
-              this.props.loggedIn ?
-              <Button onClick={this.props.signOutFn} color='inherit' >Sign Out</Button> :
-              <Button component={Link} to="/login" color="inherit">Log In</Button> 
-            }
           </Toolbar>
         </AppBar>
         <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>

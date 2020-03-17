@@ -126,6 +126,14 @@ class SignUp extends React.Component {
         }
     }
 
+    componentDidMount = () => {
+        firebase.auth().onAuthStateChanged(async _usr => {
+            if(_usr) {
+                this.props.history.push('/profile');
+            }
+        });
+    }
+
 }
 
 export default withStyles(styles)(SignUp);
