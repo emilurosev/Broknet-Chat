@@ -20,7 +20,8 @@ class SignUp extends React.Component {
             email: null,
             password: null,
             passwordConfirmation: null,
-            signupError: ''
+            signupError: '',
+            toProfile: false
         };
     }
 
@@ -92,10 +93,7 @@ class SignUp extends React.Component {
                     .firestore()
                     .collection('users')
                     .doc(this.state.email)
-                    .set(userObj)
-                    .then(() => {
-                        this.props.history.push('/dashboard');
-                    })
+                    .set(userObj);
             }, authError => {
                 console.log(authError);
                 this.setState({signupError: 'Failed to add user'});

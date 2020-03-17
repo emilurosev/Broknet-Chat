@@ -118,8 +118,6 @@ class Login extends React.Component {
                 .collection('users')
                 .doc(user.email)
                 .set(userObj); 
-        }).then(() => {
-            this.props.history.push('/dashboard');
         }).catch(function(error) {
             console.log(error.message);
         });
