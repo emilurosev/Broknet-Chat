@@ -110,14 +110,26 @@ class Login extends React.Component {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function(result) {
             var user = result.user;
-            const userObj = {
-                email: user.email
-            };
-            firebase
-                .firestore()
-                .collection('users')
-                .doc(user.email)
-                .set(userObj); 
+            var firstTimeLoggedIn = false;
+            const existsCheck = firebase.firestore().collection('users').doc(user.email);
+            existsCheck.get().then(docSnapshot => {
+                if(!docSnapshot.exists) {
+                    firstTimeLoggedIn = true;
+                }else {
+                    firstTimeLoggedIn = false;
+                }
+                if(firstTimeLoggedIn) {
+                    const userObj = {
+                        email: user.email
+                    };
+                    firebase
+                        .firestore()
+                        .collection('users')
+                        .doc(user.email)
+                        .set(userObj); 
+                    console.log('added');
+                }
+            });     
         }).catch(function(error) {
             console.log(error.message);
         });
