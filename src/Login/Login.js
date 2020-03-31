@@ -110,15 +110,9 @@ class Login extends React.Component {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function(result) {
             var user = result.user;
-            var firstTimeLoggedIn = false;
-            const existsCheck = firebase.firestore().collection('users').doc(user.email);
-            existsCheck.get().then(docSnapshot => {
+            const firstTimeLoggedInUser = firebase.firestore().collection('users').doc(user.email);
+            firstTimeLoggedInUser.get().then(docSnapshot => {
                 if(!docSnapshot.exists) {
-                    firstTimeLoggedIn = true;
-                }else {
-                    firstTimeLoggedIn = false;
-                }
-                if(firstTimeLoggedIn) {
                     const userObj = {
                         email: user.email
                     };
@@ -127,7 +121,7 @@ class Login extends React.Component {
                         .collection('users')
                         .doc(user.email)
                         .set(userObj); 
-                    console.log('added');
+                    console.log('added new user');   
                 }
             });     
         }).catch(function(error) {

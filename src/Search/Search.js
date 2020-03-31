@@ -25,7 +25,6 @@ class Search extends React.Component {
             found: false,
             searchPatternFinal: '', 
             result: [],
-            counter: 0
         };
     }
 
@@ -51,13 +50,11 @@ class Search extends React.Component {
     search = async() => {
         await firebase.firestore().collection("users").doc(this.state.searchPattern).get().then((doc) => {
             if (doc.exists) {
-                //console.log("Document data:", doc.data());
                 var res = [];
                 res.push(doc.data().email)
-                this.setState({found: true, searchPatternFinal: this.state.searchPattern, counter: this.state.counter + 1, result: res});
+                this.setState({found: true, searchPatternFinal: this.state.searchPattern, result: res});
                 console.log(this.state.result[0]);
             } else {
-                // doc.data() will be undefined in this case
                 console.log("No such document!");
                 this.setState({found: false});
 
@@ -68,7 +65,7 @@ class Search extends React.Component {
     }
 
     clear = () => {
-        this.setState({found: false, searchPattern: '', searchPatternFinal: '', counter: 0, result: []})
+        this.setState({found: false, searchPattern: '', searchPatternFinal: '', result: []})
     }
 
     render() {
@@ -101,7 +98,7 @@ class Search extends React.Component {
                             </Grid>
                             <div>
                                 {   this.state.found && this.state.searchPatternFinal !== '' ?
-                                    <h3>Results: {this.state.counter} result(s)</h3> :
+                                    <h3>Results: {this.state.result.length} result(s)</h3> :
                                     null
                                 }
                             </div>
