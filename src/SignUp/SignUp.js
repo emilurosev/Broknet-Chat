@@ -12,8 +12,10 @@ import { Link } from 'react-router-dom';
 const firebase = require("firebase");
 
 
+
 class SignUp extends React.Component {
 
+    
     constructor() {
         super();
         this.state = {
@@ -23,11 +25,12 @@ class SignUp extends React.Component {
             signupError: '',
             toProfile: false
         };
-    }
+    };
 
     render() {
 
         const { classes } = this.props;
+        
 
         return(
             <main className={classes.main}>
@@ -36,6 +39,7 @@ class SignUp extends React.Component {
                     <Typography component='h1' variant='h5'>
                         Sign Up!
                     </Typography>
+                    <Button onClick={() => this.signUpGoogle()}>Sign Up With Google</Button>
                     <form onSubmit={(e) => this.submitSignUp(e)} className={classes.form}>
                         <FormControl required fullWidth margin='normal'>
                             <InputLabel htmlFor="signup-email-input">
@@ -72,6 +76,45 @@ class SignUp extends React.Component {
         );
     }
 
+    
+    
+
+    signUpGoogle = () => {
+
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        firebase.auth().signInWithPopup(provider).then(function(result) {
+            
+            this.setUserData(result.user);
+            
+          }).catch(function(error) {
+            
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            
+            var email = error.email;
+            
+            var credential = error.credential;
+            
+          });
+          
+
+    }
+
+    setUserData = (user) => {
+        const userRef = firebase.firestore().doc(`users/${user.uid}`);
+        const userData = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          emailVerified: user.emailVerified
+        }
+        return userRef.set(userData, {
+          merge: true
+        })
+      }
+
     submitSignUp = (e) => {
         e.preventDefault();
         //console.log(this.state);
@@ -85,15 +128,17 @@ class SignUp extends React.Component {
             .auth()
             .createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then(authRes => {
-                const userObj = {
-                    email: authRes.user.email
-                };
+                // const userObj = {
+                //     email: authRes.user.email
+                // };
+                // authRes.user.sendEmailVerification();
+                // firebase
+                //     .firestore()
+                //     .collection('users')
+                //     .doc(this.state.email)
+                //     .set(userObj);
                 authRes.user.sendEmailVerification();
-                firebase
-                    .firestore()
-                    .collection('users')
-                    .doc(this.state.email)
-                    .set(userObj);
+                this.setUserData(authRes.user);
             }, authError => {
                 console.log(authError);
                 this.setState({signupError: 'Failed to add user'});
