@@ -86,6 +86,7 @@ class SignUp extends React.Component {
         firebase.auth().signInWithPopup(provider).then(function(result) {
             
             this.setUserData(result.user);
+
             
           }).catch(function(error) {
             
@@ -102,7 +103,7 @@ class SignUp extends React.Component {
     }
 
     setUserData = (user) => {
-        const userRef = firebase.firestore().doc(`users/${user.uid}`);
+        const userRef = firebase.firestore().doc(`users/${user.email}`);
         const userData = {
           uid: user.uid,
           email: user.email,
