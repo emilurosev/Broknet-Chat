@@ -76,6 +76,20 @@ class Login extends React.Component {
         });
     }
 
+    setUserData = (user) => {
+        const userRef = firebase.firestore().doc(`users/${user.uid}`);
+        const userData = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          emailVerified: user.emailVerified
+        }
+        return userRef.set(userData, {
+          merge: true
+        })
+      }
+
     submitLogin = (e) => {
         e.preventDefault();
         
@@ -113,14 +127,15 @@ class Login extends React.Component {
             const firstTimeLoggedInUser = firebase.firestore().collection('users').doc(user.email);
             firstTimeLoggedInUser.get().then(docSnapshot => {
                 if(!docSnapshot.exists) {
-                    const userObj = {
-                        email: user.email
-                    };
-                    firebase
-                        .firestore()
-                        .collection('users')
-                        .doc(user.email)
-                        .set(userObj); 
+                    this.setUserData(user);
+                    // const userObj = {
+                    //     email: user.email
+                    // };
+                    // firebase
+                    //     .firestore()
+                    //     .collection('users')
+                    //     .doc(user.email)
+                    //     .set(userObj); 
                     console.log('added new user');   
                 }
             });     
