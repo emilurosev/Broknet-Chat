@@ -37,7 +37,7 @@ class Search extends React.Component {
 
         firebase.firestore().collection('users').get()
         .then(querySnapshot => {
-          this.state.users = querySnapshot.docs.map(doc => doc.data());
+          this.setState({ users:  querySnapshot.docs.map(doc => doc.data())});
         });
 
         firebase.auth().onAuthStateChanged(async _usr => {
