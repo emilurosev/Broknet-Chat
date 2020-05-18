@@ -20,7 +20,8 @@ class Login extends React.Component {
             email: null,
             password: null, 
             loginError: ''
-        }
+        };
+        this.loginWithGoogle = this.loginWithGoogle.bind(this);
     }
 
     render() {

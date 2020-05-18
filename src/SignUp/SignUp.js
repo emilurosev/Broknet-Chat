@@ -25,6 +25,7 @@ class SignUp extends React.Component {
             signupError: '',
             toProfile: false
         };
+
     };
 
     render() {
@@ -39,7 +40,7 @@ class SignUp extends React.Component {
                     <Typography component='h1' variant='h5'>
                         Sign Up!
                     </Typography>
-                    <Button onClick={() => this.signUpGoogle()}>Sign Up With Google</Button>
+                    <Button onClick={this.signUpGoogle.bind(this)}>Sign Up With Google</Button>
                     <form onSubmit={(e) => this.submitSignUp(e)} className={classes.form}>
                         <FormControl required fullWidth margin='normal'>
                             <InputLabel htmlFor="signup-email-input">
@@ -84,6 +85,8 @@ class SignUp extends React.Component {
         const provider = new firebase.auth.GoogleAuthProvider();
 
         firebase.auth().signInWithPopup(provider).then(function(result) {
+
+            console.log(result.user);
             
             this.setUserData(result.user);
 
