@@ -9,6 +9,8 @@ import Button from '@material-ui/core/Button';
 import Cancel from '@material-ui/icons/Cancel';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
 //import ListItemText from '@material-ui/core/ListItemText';
 
 const firebase = require('firebase');
@@ -25,12 +27,19 @@ class Search extends React.Component {
             found: false,
             searchPatternFinal: '', 
             result: [],
+            users: []
         };
     }
 
 
 
     componentDidMount = () => {
+
+        firebase.firestore().collection('users').get()
+        .then(querySnapshot => {
+          this.state.users = querySnapshot.docs.map(doc => doc.data());
+        });
+
         firebase.auth().onAuthStateChanged(async _usr => {
             if(!_usr) {
                 this.props.history.push('/login');
@@ -45,24 +54,35 @@ class Search extends React.Component {
         this.setState({
             searchPattern: e.target.value
         });
+        this.search();
+        this.state.result.length>0 ? this.setState({found: true}) : this.setState({found: false});
     }
 
-    search = async() => {
-        await firebase.firestore().collection("users").doc(this.state.searchPattern).get().then((doc) => {
-            if (doc.exists) {
-                var res = [];
-                res.push(doc.data().email)
-                this.setState({found: true, searchPatternFinal: this.state.searchPattern, result: res});
-                console.log(this.state.result[0]);
-            } else {
-                console.log("No such document!");
-                this.setState({found: false});
+    // search = async() => {
+    //     await firebase.firestore().collection("users").doc(this.state.searchPattern).get().then((doc) => {
+    //         if (doc.exists) {
+    //             var res = [];
+    //             res.push(doc.data().email)
+    //             this.setState({found: true, searchPatternFinal: this.state.searchPattern, result: res});
+    //             console.log(this.state.result[0]);
+    //         } else {
+    //             console.log("No such document!");
+    //             this.setState({found: false});
 
-            }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
-    }
+    //         }
+    //     }).catch(function(error) {
+    //         console.log("Error getting document:", error);
+    //     });
+    // }
+
+    search = () =>{ 
+        
+        let resultV = this.state.users.filter(user => 
+        user.email.toLowerCase().startsWith(this.state.searchPattern.toLowerCase()));
+
+        this.setState({result: resultV});
+        
+    };
 
     clear = () => {
         this.setState({found: false, searchPattern: '', searchPatternFinal: '', result: []})
@@ -97,18 +117,22 @@ class Search extends React.Component {
                                 
                             </Grid>
                             <div>
-                                {   this.state.found && this.state.searchPatternFinal !== '' ?
+                                {   this.state.found && this.state.searchPattern !== '' ?
                                     <h3>Results: {this.state.result.length} result(s)</h3> :
                                     null
                                 }
                             </div>
                             <div>
-                                {   this.state.found && this.state.searchPatternFinal !== '' ?
+                                {   this.state.found && this.state.searchPattern !== '' ?
                                     <div>
                                         <List>
                                             {this.state.result.map(i => (
                                                 <ListItem button>
-                                                    <ListItemText>{i}</ListItemText>
+                                                    
+                                                    <ListItemAvatar>
+                                                    <Avatar alt={i.displayName} src={i.photoURL} />
+                                                    </ListItemAvatar>
+                                                    <ListItemText>{i.email}</ListItemText>
                                                 </ListItem>
                                             ))}
                                         </List>
