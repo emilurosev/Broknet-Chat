@@ -27,9 +27,10 @@ class ChatView extends React.Component {
                     <main style={{paddingTop: '5rem'}} id='chatview-container' className={classes.content}>
                         {
                             chat.messages.map((_msg, _index) => {
+                                var timestamp = new Date(_msg.timestamp);
                                 return(
                                     <div className={_msg.sender === user ? classes.userSent : classes.friendSent} key={_index}>
-                                        {_msg.message} <br></br> <span>{_msg.timestamp}</span>
+                                        {_msg.message} <br></br> <span>{String(timestamp)}</span>
                                     </div>
                                 );
                             })

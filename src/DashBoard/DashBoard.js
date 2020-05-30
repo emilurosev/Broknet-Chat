@@ -149,6 +149,9 @@ class DashBoard extends React.Component {
                     })
             }
         });
+        if(this.props.match.params.email !== undefined) {
+            console.log(this.props.match.params.email);
+        }
     }
 
 }
