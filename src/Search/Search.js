@@ -11,6 +11,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import { Link } from 'react-router-dom'
 //import ListItemText from '@material-ui/core/ListItemText';
 
 const firebase = require('firebase');
@@ -27,27 +28,36 @@ class Search extends React.Component {
             found: false,
             searchPatternFinal: '', 
             result: [],
-            users: []
+            users: [], 
+            usernames: []
         };
     }
 
 
 
-    componentDidMount = () => {
-
-        firebase.firestore().collection('users').get()
-        .then(querySnapshot => {
-          this.setState({ users:  querySnapshot.docs.map(doc => doc.data())});
-        });
-
+    componentDidMount = async() => {
         firebase.auth().onAuthStateChanged(async _usr => {
             if(!_usr) {
                 this.props.history.push('/login');
             }
             else {
-                await this.setState({email: _usr.email, emailVerified: _usr.emailVerified, photo: _usr.photoURL});
+                this.setState({email: _usr.email, emailVerified: _usr.emailVerified, photo: _usr.photoURL});
             }
         });
+        const arr = [];
+        await firebase.firestore().collection('users').get()
+            .then(querySnapshot => {
+                querySnapshot.docs.forEach(doc => {
+                    let item = doc.data();
+                    if(item.email !== this.state.email) {
+                        arr.push(item.email.slice(0, item.email.indexOf('@')));
+                        this.setState({ usernames: arr });
+                    }
+                });
+                this.setState({ users:  querySnapshot.docs.map(doc => doc.data())});
+        });
+        console.log(this.state.usernames);
+        console.log(this.state.email);       
     }
 
     _handleTextFieldChange = (e) => {
@@ -58,30 +68,10 @@ class Search extends React.Component {
         this.state.result.length>0 ? this.setState({found: true}) : this.setState({found: false});
     }
 
-    // search = async() => {
-    //     await firebase.firestore().collection("users").doc(this.state.searchPattern).get().then((doc) => {
-    //         if (doc.exists) {
-    //             var res = [];
-    //             res.push(doc.data().email)
-    //             this.setState({found: true, searchPatternFinal: this.state.searchPattern, result: res});
-    //             console.log(this.state.result[0]);
-    //         } else {
-    //             console.log("No such document!");
-    //             this.setState({found: false});
-
-    //         }
-    //     }).catch(function(error) {
-    //         console.log("Error getting document:", error);
-    //     });
-    // }
-
-    search = () =>{ 
-        
+    search = () => { 
         let resultV = this.state.users.filter(user => 
-        user.email.toLowerCase().startsWith(this.state.searchPattern.toLowerCase()));
-
-        this.setState({result: resultV});
-        
+            user.email.toLowerCase().startsWith(this.state.searchPattern.toLowerCase()));
+        this.setState({result: resultV});       
     };
 
     clear = () => {
@@ -127,10 +117,10 @@ class Search extends React.Component {
                                     <div>
                                         <List>
                                             {this.state.result.map(i => (
-                                                <ListItem button>
+                                                <ListItem button component={Link} /*to={`/user/${i.email.slice(0, i.email.indexOf("@"))}`}*/ to={`/user/${i.uid}`}>
                                                     
                                                     <ListItemAvatar>
-                                                    <Avatar alt={i.displayName} src={i.photoURL} />
+                                                        <Avatar alt={i.displayName} src={i.photoURL} />
                                                     </ListItemAvatar>
                                                     <ListItemText>{i.email}</ListItemText>
                                                 </ListItem>

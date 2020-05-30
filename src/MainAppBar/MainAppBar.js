@@ -41,8 +41,6 @@ export default class MainAppBar extends React.Component {
       else {
         await firebase
           this.setState({loggedIn: true})
-          // console.log(this.state.email);
-          console.log(_usr.email);
       }
     });
 

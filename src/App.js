@@ -8,13 +8,9 @@ import News from './News/News';
 import HomePage from './HomePage/HomePage';
 import MyProfile from './MyProfile/MyProfile';
 import Search from './Search/Search';
+import SearchedUser from './SearchedUser/SearchedUser';
 
 class App extends React.Component {
-
-    constructor() {
-      super();
-      this.state = {};
-    }
 
     render() { 
         const routing = (  
@@ -27,6 +23,7 @@ class App extends React.Component {
             <Route path='/news' exact component={News}></Route> 
             <Route path='/profile' exact component={MyProfile}></Route>
             <Route path='/search' exact component={Search}></Route>
+            <Route path='/user/:id' exact component={SearchedUser}></Route>
           </Router>
           );
 
