@@ -22,7 +22,7 @@ class ChatView extends React.Component {
             return(
                 <div>
                     <div className={classes.chatHeader}>
-                        Your conversation with {chat.users.filter(_usr => _usr !== user)[0]}
+                        Your conversation with {chat.users instanceof Array && chat.users.length <3 ? chat.users.filter(_usr => _usr !== user)[0] : 'Everyone'}
                     </div>
                     <main style={{paddingTop: '5rem'}} id='chatview-container' className={classes.content}>
                         {

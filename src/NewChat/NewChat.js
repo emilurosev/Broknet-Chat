@@ -104,7 +104,7 @@ class NewChat extends React.Component {
     }
 
     goToChat = () => {
-        this.props.goToChatFn(this.buildDocKey, this.state.message);
+        this.props.goToChatFn(this.buildDocKey(), this.state.message);
     }
 
     buildDocKey = () => {

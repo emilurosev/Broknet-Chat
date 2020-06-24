@@ -19,6 +19,9 @@ class SearchedUser extends React.Component{
             profit: 0
 
         };
+
+        this.findStockByID = this.findStockByID.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
     }
 
     componentDidMount = async () => {
@@ -39,7 +42,7 @@ class SearchedUser extends React.Component{
         })
         console.log(this.state.stocks);
         this.state.searchedUser.portfolio.forEach(item => this.setState({totalUserInvestment: this.state.totalUserInvestment+item.investment}));
-        this.state.searchedUser.portfolio.forEach(item => this.setState({totalShareValue: this.totalShareValue+item.amount*((this.findStockByID(item.id)).last) }));
+        // this.state.searchedUser.portfolio.forEach(item => this.setState({totalShareValue: this.totalShareValue+item.amount*((this.findStockByID(item.id)).last) }));
         this.setState({profit: this.state.totalShareValue-this.state.totalUserInvestment});
         this.state.searchedUser.portfolio.forEach(item => {if(item.amount == 0) this.state.searchedUser.portfolio.splice(this.state.searchedUser.portfolio.indexOf(item))});
         console.log(this.state.totalUserInvestment)

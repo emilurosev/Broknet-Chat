@@ -21,6 +21,7 @@ class App extends React.Component {
             <Route path='/dashboard' exact component={DashBoard}></Route>
             <Route path='/dashboard/:email' exact component={DashBoard}></Route>
             <Route path='/login' exact component={Login} changeLoggedInStateFn={this.changeLoggedInState}></Route>
+            <Route path='/login/:cred' exact component={Login} changeLoggedInStateFn={false}></Route>
             <Route path='/news' exact component={News}></Route> 
             <Route path='/profile' exact component={MyProfile}></Route>
             <Route path='/search' exact component={Search}></Route>

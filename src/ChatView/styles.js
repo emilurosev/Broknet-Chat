@@ -1,7 +1,7 @@
 const styles = theme => ({
 
     content: {
-      height: 'calc(100vh - 100px)',
+      height: 'calc(100vh - 110px)',
       overflow: 'auto',
       padding: '25px',
       marginLeft: '300px',
@@ -13,7 +13,7 @@ const styles = theme => ({
     },
   
     userSent: {
-      float: 'left',
+      float: 'right',
       clear: 'both',
       padding: '20px',
       boxSizing: 'border-box',
@@ -26,7 +26,7 @@ const styles = theme => ({
     },
   
     friendSent: {
-      float: 'right',
+      float: 'left',
       clear: 'both',
       padding: '20px',
       boxSizing: 'border-box',

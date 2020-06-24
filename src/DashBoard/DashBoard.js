@@ -17,7 +17,10 @@ class DashBoard extends React.Component {
             newChatFormVisible: false,
             email: null,
             chats: []
-        }
+        };
+
+        this.componentDidMount = this.componentDidMount.bind(this);
+
     }
 
     render() {
@@ -88,7 +91,7 @@ class DashBoard extends React.Component {
     clickedChatWhereNotSender = (chatIndex) => this.state.chats[chatIndex].messages[this.state.chats[chatIndex].messages.length - 1].sender !== this.state.email;
 
     messageRead = () => {
-        const docKey = this.buildDocKey(this.state.chats[this.state.selectedChat].users.filter(_usr => _usr !== this.state.email)[0]);
+        const docKey = this.state.chats[this.state.selectedChat].users instanceof Array && this.state.chats[this.state.selectedChat].length >0 ? this.buildDocKey(this.state.chats[this.state.selectedChat].users.filter(_usr => _usr !== this.state.email)[0] ): 'globalChat';
         if(this.clickedChatWhereNotSender(this.state.selectedChat)) {
             firebase
                 .firestore()
@@ -141,12 +144,13 @@ class DashBoard extends React.Component {
                     .where('users', 'array-contains', _usr.email)
                     .onSnapshot(async res => {
                         const chats = res.docs.map(_doc => _doc.data());
-                        await this.setState({
-                            email: _usr.email,
-                            chats: chats
-                        });
-                        console.log(this.state);
-                    })
+
+                            await this.setState({
+                                email: _usr.email,
+                                chats: chats
+                            });
+                            console.log(this.state);
+                        })
             }
         });
         if(this.props.match.params.email !== undefined) {

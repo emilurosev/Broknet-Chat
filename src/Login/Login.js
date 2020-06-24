@@ -21,7 +21,9 @@ class Login extends React.Component {
             password: null, 
             loginError: ''
         };
-        this.loginWithGoogle = this.loginWithGoogle.bind(this);
+
+        console.log(this.state);
+
     }
 
     render() {
@@ -69,7 +71,21 @@ class Login extends React.Component {
     
     }
 
-    componentDidMount = () => {
+    componentDidMount = async () => {
+        console.log(this.props.match.params.cred);
+        if(this.props.match.params.cred){
+
+            const cred = JSON.parse(this.props.match.params.cred);
+
+            try {
+                
+                firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential(cred.oauthIdToken, cred.oauthAccessToken));
+            } catch (error) {
+                console.log(error);
+            }
+          
+
+        }
         firebase.auth().onAuthStateChanged(async _usr => {
             if(_usr) {
                 this.props.history.push('/profile');
@@ -77,19 +93,6 @@ class Login extends React.Component {
         });
     }
 
-    setUserData = (user) => {
-        const userRef = firebase.firestore().doc(`users/${user.uid}`);
-        const userData = {
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          emailVerified: user.emailVerified
-        }
-        return userRef.set(userData, {
-          merge: true
-        })
-      }
 
     submitLogin = (e) => {
         e.preventDefault();
@@ -128,15 +131,18 @@ class Login extends React.Component {
             const firstTimeLoggedInUser = firebase.firestore().collection('users').doc(user.email);
             firstTimeLoggedInUser.get().then(docSnapshot => {
                 if(!docSnapshot.exists) {
-                    this.setUserData(user);
-                    // const userObj = {
-                    //     email: user.email
-                    // };
-                    // firebase
-                    //     .firestore()
-                    //     .collection('users')
-                    //     .doc(user.email)
-                    //     .set(userObj); 
+                    // this.setUserData(user);
+                    const userRef = firebase.firestore().doc(`users/${user.uid}`);
+                    const userData = {
+                      uid: user.uid,
+                      email: user.email,
+                      displayName: user.displayName,
+                      photoURL: user.photoURL,
+                      emailVerified: user.emailVerified
+                    }
+                    return userRef.set(userData, {
+                      merge: true
+                    })
                     console.log('added new user');   
                 }
             });     
