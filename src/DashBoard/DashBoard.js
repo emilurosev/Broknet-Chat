@@ -27,30 +27,30 @@ class DashBoard extends React.Component {
 
         const { classes } = this.props;
 
-        return(
+        return (
             <div>
-                <ChatList history={this.props.history} 
-                newChatBtnFn={this.newChatBtnClicked} 
-                selectChatFn={this.selectChat} 
-                chats={this.state.chats}
-                userEmail={this.state.email}
-                selectChatIndex={this.state.selectedChat}
+                <ChatList history={this.props.history}
+                    newChatBtnFn={this.newChatBtnClicked}
+                    selectChatFn={this.selectChat}
+                    chats={this.state.chats}
+                    userEmail={this.state.email}
+                    selectChatIndex={this.state.selectedChat}
                 />
                 {
                     this.state.newChatFormVisible ?
-                    null:
-                    <ChatView user={this.state.email} 
-                        chat={this.state.chats[this.state.selectedChat]}></ChatView>
+                        null :
+                        <ChatView user={this.state.email}
+                            chat={this.state.chats[this.state.selectedChat]}></ChatView>
                 }
                 {
                     this.state.selectedChat !== null && !this.state.newChatFormVisible ?
-                    <ChatTextBox messageReadFn={this.messageRead} submitMessageFn={this.submitMessage}></ChatTextBox> :
-                    null
+                        <ChatTextBox messageReadFn={this.messageRead} submitMessageFn={this.submitMessage}></ChatTextBox> :
+                        null
                 }
                 {
                     this.state.newChatFormVisible ?
-                    <NewChat goToChatFn={this.goToChat} newChatSubmitFn={this.newChatSubmit}></NewChat> :
-                    null
+                        <NewChat goToChatFn={this.goToChat} newChatSubmitFn={this.newChatSubmit}></NewChat> :
+                        null
                 }
                 <Button className={classes.signOutBtn} onClick={this.signOut}>Sign Out</Button>
             </div>
@@ -62,56 +62,59 @@ class DashBoard extends React.Component {
     }
 
     newChatBtnClicked = () => {
-       this.setState({newChatFormVisible: true, selectedChat: null});
+        this.setState({ newChatFormVisible: true, selectedChat: null });
     }
 
-    selectChat = async (chatIndex) => {
-        await this.setState({selectedChat: chatIndex, newChatFormVisible: false});
-        this.messageRead();
+    selectChat = (chatIndex) => {
+        this.setState({ selectedChat: chatIndex, newChatFormVisible: false });
+        // this.messageRead();
     }
 
     buildDocKey = (friend) => [this.state.email, friend].sort().join(':');
 
     submitMessage = (msg) => {
-        const docKey = this.buildDocKey(this.state.chats[this.state.selectedChat].users.filter(_usr => _usr !== this.state.email)[0]);
-        firebase
-            .firestore()
-            .collection('chats')
-            .doc(docKey)
-            .update({
-                messages: firebase.firestore.FieldValue.arrayUnion({
-                    sender: this.state.email,
-                    message: msg,
-                    timestamp: Date.now()
-                }),
-                receiverHasRead: false
-            })
+        if (msg && msg !== '') {
+
+            const docKey = this.buildDocKey(this.state.chats[this.state.selectedChat].users.filter(_usr => _usr !== this.state.email)[0]);
+            firebase
+                .firestore()
+                .collection('chats')
+                .doc(docKey)
+                .update({
+                    messages: firebase.firestore.FieldValue.arrayUnion({
+                        sender: this.state.email,
+                        message: msg,
+                        timestamp: Date.now()
+                    }),
+                    receiverHasRead: false
+                })
+        }
     }
 
     clickedChatWhereNotSender = (chatIndex) => this.state.chats[chatIndex].messages[this.state.chats[chatIndex].messages.length - 1].sender !== this.state.email;
 
     messageRead = () => {
-        const docKey = this.state.chats[this.state.selectedChat].users instanceof Array && this.state.chats[this.state.selectedChat].length >0 ? this.buildDocKey(this.state.chats[this.state.selectedChat].users.filter(_usr => _usr !== this.state.email)[0] ): 'globalChat';
-        if(this.clickedChatWhereNotSender(this.state.selectedChat)) {
+        const docKey = this.state.chats && this.state.chats[this.state.selectedChat].users instanceof Array && this.state.chats[this.state.selectedChat].length > 0 ? this.buildDocKey(this.state.chats[this.state.selectedChat].users.filter(_usr => _usr !== this.state.email)[0]) : 'globalChat';
+        if (this.clickedChatWhereNotSender(this.state.selectedChat)) {
             firebase
                 .firestore()
                 .collection('chats')
                 .doc(docKey)
-                .update({ receiverHasRead: true})
+                .update({ receiverHasRead: true })
         }
         else {
             //console.log('');
         }
     }
 
-    goToChat = async (docKey, msg) => {
-        console.log(typeof docKey);
-        console.log(docKey)
+    goToChat = async (docKey, msg = '') => {
         const usersInChat = docKey.split(':');
-        const chat = this.state.chats.find(_chat => usersInChat.every(_user => _chat.users.includes(_user)));
-        this.setState({ newChatFormVisible: false});
-        await this.selectChat(this.state.chats.indexOf(chat));
-        this.submitMessage(msg);
+        const chat = this.state.chats.find(_chat => _chat.users.length === 2 && usersInChat.every(_user => _chat.users.includes(_user)));
+        this.setState({ newChatFormVisible: false });
+        this.selectChat(this.state.chats.indexOf(chat));
+        if (msg === '') {
+            this.submitMessage(msg);
+        }
     }
 
     newChatSubmit = async (chatObj) => {
@@ -128,36 +131,59 @@ class DashBoard extends React.Component {
                     sender: this.state.email
                 }]
             });
-        this.setState({newChatFormVisible : false});
-        this.selectChat(this.state.chats.length-1);
+        this.setState({ newChatFormVisible: false });
+        this.selectChat(this.state.chats.length - 1);
     }
 
     componentDidMount = () => {
         firebase.auth().onAuthStateChanged(async _usr => {
-            if(!_usr) {
+            if (!_usr) {
                 this.props.history.push('/login');
             }
             else {
-                await firebase
+                firebase
                     .firestore()
                     .collection('chats')
                     .where('users', 'array-contains', _usr.email)
                     .onSnapshot(async res => {
                         const chats = res.docs.map(_doc => _doc.data());
 
-                            await this.setState({
-                                email: _usr.email,
-                                chats: chats
-                            });
-                            console.log(this.state);
-                        })
+                        this.setState({
+                            email: _usr.email,
+                            chats: chats
+                        });
+
+                        if (this.props.match.params.email !== undefined) {
+                            if (this.props.match.params.email === 'globalChat') {
+                                this.goToChat('globalChat')
+                            }
+                            else {
+
+                                const filtered = this.state.chats.filter(chat => chat.users.includes(this.props.match.params.email) && chat.users.includes(this.state.email) && chat.users.length === 2);
+                                console.log({ filter: filtered })
+                                if (filtered.length === 0) {
+                                    const chatObj = {
+                                        sendTo: this.props.match.params.email,
+                                        message: '',
+                                        timestamp: Date.now()
+                                    };
+                                    console.log('IF')
+                                    this.newChatSubmit(chatObj);
+                                }
+                                else {
+                                    this.goToChat(this.buildDocKey(this.props.match.params.email), '');
+                                }
+                            }
+                        }
+                    })
             }
         });
-        if(this.props.match.params.email !== undefined) {
-            console.log(this.props.match.params.email);
-        }
-    }
 
+
+        console.log(this.state.chats)
+    }
 }
+
+
 
 export default withStyles(styles)(DashBoard);

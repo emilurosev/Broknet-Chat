@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import NotificationImportant from '@material-ui/icons/NotificationImportant';
+import { Link } from 'react-router-dom';
 
 class ChatList extends React.Component {
     constructor() {
@@ -25,9 +26,11 @@ class ChatList extends React.Component {
         if(this.props.chats instanceof Array && this.props.chats.length > 0) {
             return(
                 <main className={classes.root}>
+                    <Link to='/search'>
                     <Button variant='contained' fullWidth color='primary'
                     className={classes.newChatBtn}
-                    onClick={this.newChat}>New Message</Button>
+                    >New Message</Button>
+                    </Link>
                     <List>
                         {   
                             this.props.chats.map((_chat, _index) => {

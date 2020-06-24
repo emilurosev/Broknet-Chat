@@ -145,11 +145,6 @@ export default class MainAppBar extends React.Component {
             </div> :
             null
           }
-          <ListItem button component={Link} to='/news'>
-            <ListItemIcon><ViewComfyIcon></ViewComfyIcon></ListItemIcon>
-            <ListItemText primary={'News'}></ListItemText>
-          </ListItem>
-          <Divider></Divider>
           {
             this.state.loggedIn ?
             <div>

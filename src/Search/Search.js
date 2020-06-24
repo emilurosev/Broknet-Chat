@@ -70,7 +70,7 @@ class Search extends React.Component {
 
     search = () => { 
         let resultV = this.state.users.filter(user => 
-            user.email.toLowerCase().startsWith(this.state.searchPattern.toLowerCase()));
+            user.email.toLowerCase().includes(this.state.searchPattern.toLowerCase()));
         this.setState({result: resultV});       
     };
 
@@ -117,7 +117,7 @@ class Search extends React.Component {
                                     <div>
                                         <List>
                                             {this.state.result.map(i => (
-                                                <ListItem button component={Link} /*to={`/user/${i.email.slice(0, i.email.indexOf("@"))}`}*/ to={`/user/${i.uid}`}>
+                                                <ListItem button component={Link}to={`/user/${i.uid}`}>
                                                     
                                                     <ListItemAvatar>
                                                         <Avatar alt={i.displayName} src={i.photoURL} />
