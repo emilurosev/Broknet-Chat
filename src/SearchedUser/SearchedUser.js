@@ -16,7 +16,8 @@ class SearchedUser extends React.Component{
             stocks: [],
             totalUserInvestment: 0,
             totalShareValue: 0,
-            profit: 0
+            profit: 0, 
+            private: false
 
         };
 
@@ -31,23 +32,27 @@ class SearchedUser extends React.Component{
             }
         });
         const userDoc = firebase.firestore().collection('users').doc(this.props.match.params.id);
-        userDoc.get().then(usr => { this.setState({ searchedUser: usr.data() }) } );
-        const arr = [];
-        await firebase.firestore().collection('stocks').get().then(querySnapshot => {
-            querySnapshot.docs.forEach(doc => {
-                let item = doc.data();
-                arr.push(item);
-                this.setState({ stocks: arr });
-            })
-        })
-        console.log(this.state.stocks);
-        this.state.searchedUser.portfolio.forEach(item => this.setState({totalUserInvestment: this.state.totalUserInvestment+item.investment}));
-        // this.state.searchedUser.portfolio.forEach(item => this.setState({totalShareValue: this.totalShareValue+item.amount*((this.findStockByID(item.id)).last) }));
-        this.setState({profit: this.state.totalShareValue-this.state.totalUserInvestment});
-        this.state.searchedUser.portfolio.forEach(item => {if(item.amount == 0) this.state.searchedUser.portfolio.splice(this.state.searchedUser.portfolio.indexOf(item))});
-        console.log(this.state.totalUserInvestment)
-        console.log(this.state.totalShareValue)
-        console.log(this.state.profit)
+        await userDoc.get().then(usr => { this.setState({ searchedUser: usr.data() }) } );
+        if(this.state.searchedUser.private) {
+            this.setState({private:true});
+        }
+        else {
+            const arr = [];
+            await firebase.firestore().collection('stocks').get().then(querySnapshot => {
+                querySnapshot.docs.forEach(doc => {
+                    let item = doc.data();
+                    arr.push(item);
+                    this.setState({ stocks: arr });
+                })
+            });
+            if(this.state.portfolio !== undefined) {
+                this.state.searchedUser.portfolio.forEach(item => this.setState({totalUserInvestment: this.state.totalUserInvestment+item.investment}));
+                // this.state.searchedUser.portfolio.forEach(item => this.setState({totalShareValue: this.totalShareValue+item.amount*((this.findStockByID(item.id)).last) }));
+                this.setState({profit: this.state.totalShareValue-this.state.totalUserInvestment});
+                this.state.searchedUser.portfolio.forEach(item => {if(item.amount == 0) this.state.searchedUser.portfolio.splice(this.state.searchedUser.portfolio.indexOf(item))});
+              
+            }
+        }
     }
 
     findStockByID = (id) => {
@@ -59,12 +64,22 @@ class SearchedUser extends React.Component{
         return <div>
             <Container style={{textAlign: "center"}}>
                 <Paper style={{marginTop: '2rem', padding: '1rem'}}>
-                    <h2>{this.state.searchedUser.email}</h2>
-                    <img src={this.state.searchedUser.photoURL}></img>
-                    <p>Total Investment: {this.state.totalUserInvestment}</p>
-                    <p>Total Share Value: {this.state.totalShareValue}</p>
-                    <p>Total Profit: {this.state.profit}</p>
-                    <IconButton color='primary' component={Link} to={`/dashboard/${this.state.searchedUser.email}`}>Send Message<ChatBubble></ChatBubble></IconButton>
+                    {
+                        this.state.private ?
+                        <div>
+                            <h3>Private profile</h3>
+                        </div>
+                        :
+                        <div>
+                             <h2>{this.state.searchedUser.email}</h2>
+                            <img src={this.state.searchedUser.photoURL}></img>
+                            <p>Total Investment: {this.state.totalUserInvestment}</p>
+                            <p>Total Share Value: {this.state.totalShareValue}</p>
+                            <p>Total Profit: {this.state.profit}</p>
+                            <IconButton color='primary' component={Link} to={`/dashboard/${this.state.searchedUser.email}`}>Send Message<ChatBubble></ChatBubble></IconButton>
+                        </div>
+                    }
+                   
                 </Paper>
             </Container>
         </div>

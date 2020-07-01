@@ -106,13 +106,15 @@ class SignUp extends React.Component {
     }
 
     setUserData = (user) => {
-        const userRef = firebase.firestore().doc(`users/${user.email}`);
+        const userRef = firebase.firestore().doc(`users/${user.uid}`);
         const userData = {
           uid: user.uid,
           email: user.email,
           displayName: user.displayName,
           photoURL: user.photoURL,
-          emailVerified: user.emailVerified
+          emailVerified: user.emailVerified,
+          private: false,
+        
         }
         return userRef.set(userData, {
           merge: true

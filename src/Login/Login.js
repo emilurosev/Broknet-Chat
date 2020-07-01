@@ -138,7 +138,11 @@ class Login extends React.Component {
                       email: user.email,
                       displayName: user.displayName,
                       photoURL: user.photoURL,
-                      emailVerified: user.emailVerified
+                      emailVerified: user.emailVerified,
+                      friends: [],
+                      private: false,
+                      friendRequests: []
+                    
                     }
                     return userRef.set(userData, {
                       merge: true

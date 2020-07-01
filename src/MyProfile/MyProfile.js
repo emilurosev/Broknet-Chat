@@ -1,6 +1,6 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper'
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 
 const firebase = require('firebase');
@@ -12,19 +12,47 @@ class MyProfile extends React.Component {
         this.state = {
             email: "",
             photo: "",
-            emailVerified: false
+            emailVerified: false,
+            private: false,
+            userInfo : []
         };
     }
 
-    componentDidMount = () => {
+    componentDidMount = async () => {
         firebase.auth().onAuthStateChanged(async _usr => {
             if(!_usr) {
                 this.props.history.push('/login');
             }
-            else {
-                await this.setState({email: _usr.email, emailVerified: _usr.emailVerified, photo: _usr.photoURL});
+            else {  
+                this.setState({email: _usr.email, emailVerified: _usr.emailVerified, photo: _usr.photoURL});
             }
         });
+        await firebase.firestore().collection('users').get()
+            .then(querySnapshot => {
+                querySnapshot.docs.forEach(doc => {
+                    let item = doc.data();
+                    if(doc.data().email === this.state.email) {
+                        this.setState({userInfo: doc.data()})
+                    }
+                });
+        });
+        console.log(this.state.userInfo);
+        console.log(this.state.userInfo.private);
+    }
+
+    setProfileToPrivate = async() => {
+        await firebase.firestore().collection('users').doc(this.state.userInfo.uid).update(
+            {private: true}
+        );
+        window.location.reload();
+    }
+
+    setProfileToPublic = async() => {
+        await firebase.firestore().collection('users').doc(this.state.userInfo.uid).update(
+            {private: false}
+        )
+        window.location.reload();
+
     }
 
     render() {
@@ -38,6 +66,12 @@ class MyProfile extends React.Component {
                         <Typography color='error' variant='body2'>Email is NOT verified!</Typography>
                     }
                     <img style={{marginTop: '1rem'}} src={this.state.photo} alt='profile pic'></img>
+                    <br></br>
+                    {
+                        this.state.userInfo.private ?
+                        <Button onClick={this.setProfileToPublic}>Set to public</Button> :
+                        <Button onClick={this.setProfileToPrivate}>Set to private</Button>
+                    }
                 </Paper>
             </Container>
         </div>;
