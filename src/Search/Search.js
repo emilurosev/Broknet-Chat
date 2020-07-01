@@ -54,7 +54,7 @@ class Search extends React.Component {
                         this.setState({ usernames: arr });
                     }
                 });
-                this.setState({ users:  querySnapshot.docs.map(doc => doc.data()).filter(user => user.email !== this.state.email)});
+                this.setState({ users:  querySnapshot.docs.map((doc, index) => doc.data()).filter(user => user.email !== this.state.email)});
     
         });
         console.log(this.state.usernames);
@@ -117,7 +117,7 @@ class Search extends React.Component {
                                 {   this.state.found && this.state.searchPattern !== '' ?
                                     <div>
                                         <List>
-                                            {this.state.result.map(i => (
+                                            {this.state.result.map((i,index) => (
                                                 <ListItem button component={Link}to={`/user/${i.uid}`}>
                                                     
                                                     <ListItemAvatar>

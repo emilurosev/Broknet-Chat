@@ -37,6 +37,8 @@ class MyProfile extends React.Component {
         });
         console.log(this.state.userInfo);
         console.log(this.state.userInfo.private);
+        console.log(this.state.userInfo.followRequests);
+
     }
 
     setProfileToPrivate = async() => {
@@ -52,6 +54,25 @@ class MyProfile extends React.Component {
         )
         window.location.reload();
 
+    }
+
+    acceptRequest = async(email) => {
+        await firebase.firestore().collection('users').doc(this.state.userInfo.uid).update(
+            {
+                followRequests: firebase.firestore.FieldValue.arrayRemove(email),
+                followers: firebase.firestore.FieldValue.arrayUnion(email)
+            }
+        )
+        window.location.reload();
+    }
+
+    removeFollower = async(email) => {
+        await firebase.firestore().collection('users').doc(this.state.userInfo.uid).update(
+            {
+                followers: firebase.firestore.FieldValue.arrayRemove(email)
+            }
+        );
+        window.location.reload();
     }
 
     render() {
@@ -71,6 +92,25 @@ class MyProfile extends React.Component {
                         <Button variant='contained' color='secondary' onClick={this.setProfileToPublic}>Set to public</Button> :
                         <Button variant='contained' color='secondary' onClick={this.setProfileToPrivate}>Set to private</Button>
                     }
+                    <br></br>
+                    <p>Followers: </p>
+                    { 
+                        this.state.userInfo.followers !== undefined ?
+                        this.state.userInfo.followers.map((item, index) => {
+                            return <div><li key={index}>{item}</li><Button onClick={() => this.removeFollower(item)}>Remove</Button><br></br></div>
+                        }) :
+                        null       
+                    }
+                    <br></br>
+                    <p>New requests: </p>
+                    {  
+                        this.state.userInfo.followRequests !== undefined ?
+                        this.state.userInfo.followRequests.map((item, index) => {
+                            return <div><li key={index}>{item}</li><Button onClick={() => this.acceptRequest(item)}>Accept</Button><br></br></div>
+                        }) :
+                        null
+                    }
+                    
                 </Paper>
             </Container>
         </div>;
