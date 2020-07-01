@@ -40,7 +40,6 @@ class ChatList extends React.Component {
                                             onClick={() => this.selectChat(_index)}
                                             selected={this.props.selectChatIndex === _index}
                                             alignItems='flex-start'>
-                                                {console.log(_chat.users)}
                                                 <ListItemAvatar>
                                                     <Avatar alt='Remy Sharp'>{_chat.users instanceof Array && _chat.users.length <3 ? _chat.users.filter(_user => _user !== this.props.userEmail)[0].split('')[0] : 'Global chat'}</Avatar>
                                                 </ListItemAvatar>
@@ -54,13 +53,13 @@ class ChatList extends React.Component {
                                                     }>
     
                                                 </ListItemText>
-                                                {
+                                                {/*
                                                     _chat.receiverHasRead === false && !this.userIsSender(_chat) ?
                                                     <ListItemIcon>
                                                         <NotificationImportant className={classes.unreadMessage}></NotificationImportant>
                                                     </ListItemIcon> :
                                                     null
-                                                }
+                                                */}
                                         </ListItem>
                                         <Divider></Divider>
                                     </div>

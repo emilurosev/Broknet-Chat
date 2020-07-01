@@ -30,7 +30,6 @@ class MyProfile extends React.Component {
         await firebase.firestore().collection('users').get()
             .then(querySnapshot => {
                 querySnapshot.docs.forEach(doc => {
-                    let item = doc.data();
                     if(doc.data().email === this.state.email) {
                         this.setState({userInfo: doc.data()})
                     }
@@ -69,8 +68,8 @@ class MyProfile extends React.Component {
                     <br></br>
                     {
                         this.state.userInfo.private ?
-                        <Button onClick={this.setProfileToPublic}>Set to public</Button> :
-                        <Button onClick={this.setProfileToPrivate}>Set to private</Button>
+                        <Button variant='contained' color='secondary' onClick={this.setProfileToPublic}>Set to public</Button> :
+                        <Button variant='contained' color='secondary' onClick={this.setProfileToPrivate}>Set to private</Button>
                     }
                 </Paper>
             </Container>

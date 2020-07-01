@@ -14,7 +14,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Link } from 'react-router-dom';
 import RedditIcon from '@material-ui/icons/Reddit';
-import ViewComfyIcon from '@material-ui/icons/ViewComfy';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import PeopleIcon from '@material-ui/icons/People';
 import AddCircle from '@material-ui/icons/AddCircle';

@@ -54,7 +54,8 @@ class Search extends React.Component {
                         this.setState({ usernames: arr });
                     }
                 });
-                this.setState({ users:  querySnapshot.docs.map(doc => doc.data())});
+                this.setState({ users:  querySnapshot.docs.map(doc => doc.data()).filter(user => user.email !== this.state.email)});
+    
         });
         console.log(this.state.usernames);
         console.log(this.state.email);       

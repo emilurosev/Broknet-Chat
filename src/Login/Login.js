@@ -139,15 +139,12 @@ class Login extends React.Component {
                       displayName: user.displayName,
                       photoURL: user.photoURL,
                       emailVerified: user.emailVerified,
-                      friends: [],
-                      private: false,
-                      friendRequests: []
+                      private: false
                     
                     }
                     return userRef.set(userData, {
                       merge: true
                     })
-                    console.log('added new user');   
                 }
             });     
         }).catch(function(error) {

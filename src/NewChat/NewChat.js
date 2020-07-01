@@ -1,9 +1,8 @@
 
 import React from 'react';
-import { FormControl, InputLabel, Input, Button, Paper, withStyles, CssBaseline, Typography, Snackbar, makeStyles, Slide, IconButton } from '@material-ui/core';
+import { FormControl, InputLabel, Input, Button, Paper, withStyles, CssBaseline, Typography, Snackbar, Slide, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import styles from './styles';
-import MuiAlert from '@material-ui/lab/Alert';
 
 const firebase = require("firebase");
 

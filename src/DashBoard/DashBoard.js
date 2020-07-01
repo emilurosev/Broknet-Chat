@@ -74,7 +74,6 @@ class DashBoard extends React.Component {
 
     submitMessage = (msg) => {
         if (msg && msg !== '') {
-
             const docKey = this.buildDocKey(this.state.chats[this.state.selectedChat].users.filter(_usr => _usr !== this.state.email)[0]);
             firebase
                 .firestore()
@@ -94,6 +93,7 @@ class DashBoard extends React.Component {
     clickedChatWhereNotSender = (chatIndex) => this.state.chats[chatIndex].messages[this.state.chats[chatIndex].messages.length - 1].sender !== this.state.email;
 
     messageRead = () => {
+        //const docKey = this.buildDocKey(this.state.chats[this.state.selectedChat].users.filter(_usr => _usr !== this.state.email)[0]);
         const docKey = this.state.chats && this.state.chats[this.state.selectedChat].users instanceof Array && this.state.chats[this.state.selectedChat].length > 0 ? this.buildDocKey(this.state.chats[this.state.selectedChat].users.filter(_usr => _usr !== this.state.email)[0]) : 'globalChat';
         if (this.clickedChatWhereNotSender(this.state.selectedChat)) {
             firebase
@@ -102,9 +102,6 @@ class DashBoard extends React.Component {
                 .doc(docKey)
                 .update({ receiverHasRead: true })
         }
-        else {
-            //console.log('');
-        }
     }
 
     goToChat = async (docKey, msg = '') => {
@@ -112,9 +109,10 @@ class DashBoard extends React.Component {
         const chat = this.state.chats.find(_chat => _chat.users.length === 2 && usersInChat.every(_user => _chat.users.includes(_user)));
         this.setState({ newChatFormVisible: false });
         this.selectChat(this.state.chats.indexOf(chat));
-        if (msg === '') {
+        /*if (msg === '') {
             this.submitMessage(msg);
-        }
+        }*/
+        this.submitMessage(msg);
     }
 
     newChatSubmit = async (chatObj) => {
@@ -158,16 +156,16 @@ class DashBoard extends React.Component {
                                 this.goToChat('globalChat')
                             }
                             else {
-
                                 const filtered = this.state.chats.filter(chat => chat.users.includes(this.props.match.params.email) && chat.users.includes(this.state.email) && chat.users.length === 2);
-                                console.log({ filter: filtered })
+                                //console.log({ filter: filtered })
                                 if (filtered.length === 0) {
+                                    let date = new Date();
                                     const chatObj = {
                                         sendTo: this.props.match.params.email,
-                                        message: '',
-                                        timestamp: Date.now()
+                                        message: 'Hi, ' + this.props.match.params.email.substring(0, this.props.match.params.email.indexOf('@')) + '!',
+                                        timestamp:  date.getTime().toString()
+
                                     };
-                                    console.log('IF')
                                     this.newChatSubmit(chatObj);
                                 }
                                 else {
@@ -178,9 +176,6 @@ class DashBoard extends React.Component {
                     })
             }
         });
-
-
-        console.log(this.state.chats)
     }
 }
 

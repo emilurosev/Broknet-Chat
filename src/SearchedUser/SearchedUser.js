@@ -1,7 +1,6 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import ChatBubble from '@material-ui/icons/ChatBubble';
@@ -49,15 +48,15 @@ class SearchedUser extends React.Component{
                 this.state.searchedUser.portfolio.forEach(item => this.setState({totalUserInvestment: this.state.totalUserInvestment+item.investment}));
                 // this.state.searchedUser.portfolio.forEach(item => this.setState({totalShareValue: this.totalShareValue+item.amount*((this.findStockByID(item.id)).last) }));
                 this.setState({profit: this.state.totalShareValue-this.state.totalUserInvestment});
-                this.state.searchedUser.portfolio.forEach(item => {if(item.amount == 0) this.state.searchedUser.portfolio.splice(this.state.searchedUser.portfolio.indexOf(item))});
+                this.state.searchedUser.portfolio.forEach(item => {if(item.amount === 0) this.state.searchedUser.portfolio.splice(this.state.searchedUser.portfolio.indexOf(item))});
               
             }
         }
     }
 
     findStockByID = (id) => {
-        console.log(this.state.stocks.filter(item => item.id == id)[0])
-        return this.state.stocks.filter(item => item.id == id)[0];
+        console.log(this.state.stocks.filter(item => item.id === id)[0])
+        return this.state.stocks.filter(item => item.id === id)[0];
     }
 
     render() {
@@ -72,11 +71,11 @@ class SearchedUser extends React.Component{
                         :
                         <div>
                              <h2>{this.state.searchedUser.email}</h2>
-                            <img src={this.state.searchedUser.photoURL}></img>
+                            <img alt='Profile pic' src={this.state.searchedUser.photoURL}></img>
                             <p>Total Investment: {this.state.totalUserInvestment}</p>
                             <p>Total Share Value: {this.state.totalShareValue}</p>
                             <p>Total Profit: {this.state.profit}</p>
-                            <IconButton color='primary' component={Link} to={`/dashboard/${this.state.searchedUser.email}`}>Send Message<ChatBubble></ChatBubble></IconButton>
+                            <IconButton variant='contained' color='primary' component={Link} to={`/dashboard/${this.state.searchedUser.email}`}>Say hi<ChatBubble></ChatBubble></IconButton>
                         </div>
                     }
                    

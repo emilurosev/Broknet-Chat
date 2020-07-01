@@ -81,28 +81,26 @@ class SignUp extends React.Component {
     
 
     signUpGoogle = () => {
-
         const provider = new firebase.auth.GoogleAuthProvider();
 
         firebase.auth().signInWithPopup(provider).then(function(result) {
-
+            
             console.log(result.user);
-            
             this.setUserData(result.user);
-
-            
+          
           }).catch(function(error) {
-            
+      
             var errorCode = error.code;
-            var errorMessage = error.message;
-            
+            var errorMessage = error.message
             var email = error.email;
-            
             var credential = error.credential;
+
+            console.log(errorCode);
+            console.log(errorMessage);
+            console.log(email);
+            console.log(credential);
             
           });
-          
-
     }
 
     setUserData = (user) => {

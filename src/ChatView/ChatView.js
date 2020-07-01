@@ -30,7 +30,7 @@ class ChatView extends React.Component {
                                 var timestamp = new Date(_msg.timestamp);
                                 return(
                                     <div className={_msg.sender === user ? classes.userSent : classes.friendSent} key={_index}>
-                                        {_msg.message} <br></br> <span>{String(timestamp)}</span>
+                                        {_msg.message} <br></br> {timestamp.toString()!=='Invalid Date'?<span>{String(timestamp)}</span>:null}
                                     </div>
                                 );
                             })
