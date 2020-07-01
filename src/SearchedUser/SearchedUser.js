@@ -43,7 +43,7 @@ class SearchedUser extends React.Component{
             this.setState({following: true})
         }
         else {
-            if(this.state.searchedUser.followRequests.includes(this.state.email)) {
+            if(this.state.searchedUser.followRequests.includes(this.state.email) ) {
                 this.setState({sent: true});
             }
         }
@@ -90,7 +90,7 @@ class SearchedUser extends React.Component{
                         this.state.private ?
                         <div>
                             <h3>Private profile</h3>
-                            {
+                            {   
                                 this.state.sent ?
                                 <h5>Request already sent</h5> :
                                 <Button onClick={this.sendRequest}>Send request</Button> 
@@ -99,7 +99,22 @@ class SearchedUser extends React.Component{
                         </div>
                         :
                         <div>
-                             <h2>{this.state.searchedUser.email}</h2>
+                            
+                                {
+                                    this.state.following ?
+                                    null :
+                                    <div>
+                                        {
+                                            this.state.sent ?
+                                            <h5>Request already sent</h5> :
+                                            <Button onClick={this.sendRequest}>Send request</Button> 
+                                        }
+                                    </div>
+                                }
+                                
+            
+                            
+                            <h2>{this.state.searchedUser.email}</h2>
                             <img alt='Profile pic' src={this.state.searchedUser.photoURL}></img>
                             <p>Total Investment: {this.state.totalUserInvestment}</p>
                             <p>Total Share Value: {this.state.totalShareValue}</p>
