@@ -56,13 +56,7 @@ class MyProfile extends React.Component {
 
     }
 
-    acceptRequest = async(email) => {
-        await firebase.firestore().collection('users').doc(this.state.userInfo.uid).update(
-            {
-                followRequests: firebase.firestore.FieldValue.arrayRemove(email),
-                followers: firebase.firestore.FieldValue.arrayUnion(email)
-            }
-        )
+    getId = async(email) => {
         let id;
         await firebase.firestore().collection('users').get()
             .then(querySnapshot => {
@@ -73,9 +67,32 @@ class MyProfile extends React.Component {
                     }
                 });
         });
+        return id;
+        
+    }
+
+
+    acceptRequest = async(email) => {
+        await firebase.firestore().collection('users').doc(this.state.userInfo.uid).update(
+            {
+                followRequests: firebase.firestore.FieldValue.arrayRemove(email),
+                followers: firebase.firestore.FieldValue.arrayUnion(email)
+            }
+        )
+        let id = await this.getId(email);
+     
         await firebase.firestore().collection('users').doc(id).update({
             following: firebase.firestore.FieldValue.arrayUnion(this.state.email)
         });
+        window.location.reload();
+    }
+
+    declineRequest = async(email) => {
+        await firebase.firestore().collection('users').doc(this.state.userInfo.uid).update(
+            {
+                followRequests: firebase.firestore.FieldValue.arrayRemove(email),
+            }
+        )
         window.location.reload();
     }
 
@@ -87,49 +104,60 @@ class MyProfile extends React.Component {
                 followers: firebase.firestore.FieldValue.arrayRemove(email)
             }
         );
-        let id;
-        await firebase.firestore().collection('users').get()
-            .then(querySnapshot => {
-                querySnapshot.docs.forEach(doc => {
-                    let item = doc.data();
-                    if(item.email === email) {
-                        id = item.uid;
-                    }
-                });
-        });
+        let id = await this.getId(email);
+       
         await firebase.firestore().collection('users').doc(id).update({
             following: firebase.firestore.FieldValue.arrayRemove(this.state.email)
         });
         window.location.reload();
     }
 
-    removeFollowing = async() => {
-        
+    removeFollowing = async(email) => {
+        await firebase.firestore().collection('users').doc(this.state.userInfo.uid).update(
+            {
+                following: firebase.firestore.FieldValue.arrayRemove(email)
+            }
+        );
+        let id = await this.getId(email);
+      
+        await firebase.firestore().collection('users').doc(id).update({
+            followers: firebase.firestore.FieldValue.arrayRemove(this.state.email)
+        });
+        window.location.reload()
     }
+
+
+    goToProfile = async(email) => {
+        let id = await this.getId(email);
+        this.props.history.push('/user/'+id);
+    }
+
 
     render() {
         return <div>
             <Container style={{textAlign: "center"}}>
                 <Paper style={{marginTop: '2rem', padding: '1rem'}}>
                     <Typography variant='h2'>{this.state.email}</Typography>
+                
                     {
                         this.state.emailVerified ?
                         <Typography color='primary' variant="body2">Email is verified!</Typography> :
                         <Typography color='error' variant='body2'>Email is NOT verified!</Typography>
                     }
-                    <img style={{marginTop: '1rem'}} src={this.state.photo} alt='profile pic'></img>
-                    <br></br>
                     {
                         this.state.userInfo.private ?
-                        <Button variant='contained' color='secondary' onClick={this.setProfileToPublic}>Set to public</Button> :
-                        <Button variant='contained' color='secondary' onClick={this.setProfileToPrivate}>Set to private</Button>
+                        <Button variant='contained' variant='outlined' style={{textTransform: 'none'}} color='secondary' onClick={this.setProfileToPublic}>Set profile to public</Button> :
+                        <Button color='secondary' variant='outlined' style={{textTransform: 'none'}} onClick={this.setProfileToPrivate}>Set profile to private</Button>
                     }
+                    <br></br><br></br>
+                    <img style={{marginTop: '1rem'}} src={this.state.photo} alt='profile pic'></img>
                     <br></br>
+                    <hr></hr>
                     <p>Followers: </p>
                     { 
                         this.state.userInfo.followers !== undefined ?
                         this.state.userInfo.followers.map((item, index) => {
-                            return <div><li key={index}>{item}</li><Button onClick={() => this.removeFollower(item)}>Remove</Button><br></br></div>
+                            return <div><Button key={index} style={{textTransform: 'none'}} variant='contained' color='primary' onClick={() => this.goToProfile(item)}>{item}</Button><br></br><Button color='secondary' onClick={() => this.removeFollower(item)}>Remove</Button><br></br></div>
                         }) :
                         null       
                     }
@@ -138,7 +166,7 @@ class MyProfile extends React.Component {
                     {
                         this.state.userInfo.following !== undefined ?
                         this.state.userInfo.following.map((item, index) => {
-                            return <div><li key={index}>{item}</li><br></br></div>
+                            return <div><Button key={index} style={{textTransform: 'none'}} variant='contained' color='primary' onClick={() => this.goToProfile(item)}>{item}</Button><br></br><Button color='secondary' onClick={() => this.removeFollowing(item)}>Remove</Button><br></br></div>
                         }) :
                         null       
                     }
@@ -147,7 +175,7 @@ class MyProfile extends React.Component {
                     {  
                         this.state.userInfo.followRequests !== undefined ?
                         this.state.userInfo.followRequests.map((item, index) => {
-                            return <div><li key={index}>{item}</li><Button onClick={() => this.acceptRequest(item)}>Accept</Button><br></br></div>
+                            return <div><Button key={index} style={{textTransform: 'none'}} variant='contained' color='primary' onClick={() => this.goToProfile(item)}>{item}</Button><br></br><Button color='primary' onClick={() => this.acceptRequest(item)}>Accept</Button><Button color='secondary' onClick={() => this.declineRequest(item)}>Decline</Button><br></br></div>
                         }) :
                         null
                     }
