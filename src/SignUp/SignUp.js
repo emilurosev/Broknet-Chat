@@ -113,7 +113,8 @@ class SignUp extends React.Component {
           emailVerified: user.emailVerified,
           private: false,
           followRequests: [],
-          followers: []
+          followers: [],
+          following: []
         
         }
         return userRef.set(userData, {

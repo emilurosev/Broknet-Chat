@@ -18,7 +18,9 @@ class SearchedUser extends React.Component{
             totalShareValue: 0,
             profit: 0, 
             private: false,
-            sent: false
+            sent: false,
+            following: false,
+            email: ''
 
         };
 
@@ -37,11 +39,16 @@ class SearchedUser extends React.Component{
         });
         const userDoc = firebase.firestore().collection('users').doc(this.props.match.params.id);
         await userDoc.get().then(usr => { this.setState({ searchedUser: usr.data() }) } );
-        if(this.state.searchedUser.private) {
-            this.setState({private:true});
+        if(this.state.searchedUser.followers.includes(this.state.email)) {
+            this.setState({following: true})
+        }
+        else {
             if(this.state.searchedUser.followRequests.includes(this.state.email)) {
                 this.setState({sent: true});
             }
+        }
+        if(this.state.searchedUser.private && !this.state.following) {
+            this.setState({private:true});         
         }
         else {
             const arr = [];
@@ -86,7 +93,8 @@ class SearchedUser extends React.Component{
                             {
                                 this.state.sent ?
                                 <h5>Request already sent</h5> :
-                                <Button onClick={this.sendRequest}>Send request</Button>
+                                <Button onClick={this.sendRequest}>Send request</Button> 
+            
                             }
                         </div>
                         :

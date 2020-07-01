@@ -63,8 +63,23 @@ class MyProfile extends React.Component {
                 followers: firebase.firestore.FieldValue.arrayUnion(email)
             }
         )
+        let id;
+        await firebase.firestore().collection('users').get()
+            .then(querySnapshot => {
+                querySnapshot.docs.forEach(doc => {
+                    let item = doc.data();
+                    if(item.email === email) {
+                        id = item.uid;
+                    }
+                });
+        });
+        await firebase.firestore().collection('users').doc(id).update({
+            following: firebase.firestore.FieldValue.arrayUnion(this.state.email)
+        });
         window.location.reload();
     }
+
+    
 
     removeFollower = async(email) => {
         await firebase.firestore().collection('users').doc(this.state.userInfo.uid).update(
@@ -72,7 +87,24 @@ class MyProfile extends React.Component {
                 followers: firebase.firestore.FieldValue.arrayRemove(email)
             }
         );
+        let id;
+        await firebase.firestore().collection('users').get()
+            .then(querySnapshot => {
+                querySnapshot.docs.forEach(doc => {
+                    let item = doc.data();
+                    if(item.email === email) {
+                        id = item.uid;
+                    }
+                });
+        });
+        await firebase.firestore().collection('users').doc(id).update({
+            following: firebase.firestore.FieldValue.arrayRemove(this.state.email)
+        });
         window.location.reload();
+    }
+
+    removeFollowing = async() => {
+        
     }
 
     render() {
@@ -98,6 +130,15 @@ class MyProfile extends React.Component {
                         this.state.userInfo.followers !== undefined ?
                         this.state.userInfo.followers.map((item, index) => {
                             return <div><li key={index}>{item}</li><Button onClick={() => this.removeFollower(item)}>Remove</Button><br></br></div>
+                        }) :
+                        null       
+                    }
+                    <br></br>
+                    <p>Following: </p>
+                    {
+                        this.state.userInfo.following !== undefined ?
+                        this.state.userInfo.following.map((item, index) => {
+                            return <div><li key={index}>{item}</li><br></br></div>
                         }) :
                         null       
                     }
