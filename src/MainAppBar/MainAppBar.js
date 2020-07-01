@@ -46,6 +46,10 @@ export default class MainAppBar extends React.Component {
 
   }
 
+  goDark = () => {
+    this.props.goDarkFn();
+  }
+
   signOut = () => {
     firebase.auth().signOut();
     this.setState({loggedIn: false})
@@ -173,6 +177,7 @@ export default class MainAppBar extends React.Component {
               BrokNet Social Network
             </Button>
             <div style={{flex: '1 1 auto'}}></div>
+            <Button color='inherit' className={classes.title} onClick={this.goDark} style={{textTransform: 'none'}}>Change theme</Button>
           </Toolbar>
         </AppBar>
         <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>

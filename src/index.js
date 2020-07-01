@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import App from './App';
-import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
-import { theme } from './theme';
 
 const firebase = require('firebase');
 require("firebase/firestore");
@@ -20,9 +18,9 @@ firebase.initializeApp({
     measurementId: "G-CQSXDBTFPE"
 });
 
-const appliedTheme = <MuiThemeProvider theme={theme}><CssBaseline></CssBaseline><App></App></MuiThemeProvider>;
 
-ReactDOM.render(appliedTheme, document.getElementById('root'));
+ReactDOM.render(<App></App>, document.getElementById('root'));
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

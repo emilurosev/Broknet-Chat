@@ -9,13 +9,29 @@ import HomePage from './HomePage/HomePage';
 import MyProfile from './MyProfile/MyProfile';
 import Search from './Search/Search';
 import SearchedUser from './SearchedUser/SearchedUser';
+import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
+import { theme } from './theme';
+import { themeDark } from './theme-dark';
+
 
 class App extends React.Component {
+
+    constructor() {
+      super();
+      this.state = {
+        dark: false
+      };
+    }
+
+    goDark = () => {
+      this.setState({dark: !this.state.dark});
+      console.log(this.state.dark);
+    }
 
     render() { 
         const routing = (  
           <Router>
-            <MainAppBar></MainAppBar> 
+            <MainAppBar goDarkFn={this.goDark}></MainAppBar> 
             <Route path='/' exact component={HomePage}></Route>
             <Route path='/signup' exact component={SignUp}></Route>
             <Route path='/dashboard' exact component={DashBoard}></Route>
@@ -29,10 +45,14 @@ class App extends React.Component {
           </Router>
           );
 
-        return(       
-          <div>
-            {routing}   
-          </div>     
+        return(
+          <MuiThemeProvider theme={this.state.dark ? themeDark : theme}>
+            <CssBaseline></CssBaseline>
+            <div>
+              {routing}   
+            </div> 
+          </MuiThemeProvider>       
+              
         );
     } 
 
