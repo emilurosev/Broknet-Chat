@@ -112,6 +112,8 @@ class SignUp extends React.Component {
           photoURL: user.photoURL,
           emailVerified: user.emailVerified,
           private: false,
+          followRequests: [],
+          followers: []
         
         }
         return userRef.set(userData, {

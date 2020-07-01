@@ -88,7 +88,7 @@ class Login extends React.Component {
         }
         firebase.auth().onAuthStateChanged(async _usr => {
             if(_usr) {
-                this.props.history.push('/profile');
+                this.props.history.push('/dashboard');
             }
         });
     }
@@ -139,7 +139,9 @@ class Login extends React.Component {
                       displayName: user.displayName,
                       photoURL: user.photoURL,
                       emailVerified: user.emailVerified,
-                      private: false
+                      private: false,
+                      followRequests: [],
+                      followers: []
                     
                     }
                     return userRef.set(userData, {

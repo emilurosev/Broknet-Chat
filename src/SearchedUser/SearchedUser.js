@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import { Link } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import ChatBubble from '@material-ui/icons/ChatBubble';
+import { Button } from '@material-ui/core';
 
 const firebase = require('firebase');
 
@@ -16,7 +17,8 @@ class SearchedUser extends React.Component{
             totalUserInvestment: 0,
             totalShareValue: 0,
             profit: 0, 
-            private: false
+            private: false,
+            sent: false
 
         };
 
@@ -29,11 +31,17 @@ class SearchedUser extends React.Component{
             if(!_usr) {
                 this.props.history.push('/login');
             }
+            else {
+                this.setState({email: _usr.email});
+            }
         });
         const userDoc = firebase.firestore().collection('users').doc(this.props.match.params.id);
         await userDoc.get().then(usr => { this.setState({ searchedUser: usr.data() }) } );
         if(this.state.searchedUser.private) {
             this.setState({private:true});
+            if(this.state.searchedUser.followRequests.includes(this.state.email)) {
+                this.setState({sent: true});
+            }
         }
         else {
             const arr = [];
@@ -52,11 +60,19 @@ class SearchedUser extends React.Component{
               
             }
         }
+        console.log(this.state.searchedUser.followRequests);
     }
 
     findStockByID = (id) => {
         console.log(this.state.stocks.filter(item => item.id === id)[0])
         return this.state.stocks.filter(item => item.id === id)[0];
+    }
+
+    sendRequest = async() => {
+        await firebase.firestore().collection('users').doc(this.props.match.params.id).update(
+            { followRequests: firebase.firestore.FieldValue.arrayUnion(this.state.email) }
+        );
+        window.location.reload();
     }
 
     render() {
@@ -67,6 +83,11 @@ class SearchedUser extends React.Component{
                         this.state.private ?
                         <div>
                             <h3>Private profile</h3>
+                            {
+                                this.state.sent ?
+                                <h5>Request already sent</h5> :
+                                <Button onClick={this.sendRequest}>Send request</Button>
+                            }
                         </div>
                         :
                         <div>
