@@ -35,9 +35,6 @@ class MyProfile extends React.Component {
                     }
                 });
         });
-        console.log(this.state.userInfo);
-        console.log(this.state.userInfo.private);
-        console.log(this.state.userInfo.followRequests);
 
     }
 
@@ -149,7 +146,7 @@ class MyProfile extends React.Component {
                         <Button variant='contained' variant='outlined' style={{textTransform: 'none'}} color='secondary' onClick={this.setProfileToPublic}>Set profile to public</Button> :
                         <Button color='secondary' variant='outlined' style={{textTransform: 'none'}} onClick={this.setProfileToPrivate}>Set profile to private</Button>
                     }
-                    <br></br><br></br>
+                    <br></br>
                     <img style={{marginTop: '1rem'}} src={this.state.photo} alt='profile pic'></img>
                     <br></br>
                     <hr></hr>
