@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Paper from '@material-ui/core/Paper'
 import Container from '@material-ui/core/Container';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionOnce } from 'react-firebase-hooks/firestore';
 
@@ -12,6 +12,7 @@ export default function Settings(props) {
     const [userInfo, setUserInfo] = useState([]);
     //const [user, loading, error] = useAuthState(firebase.auth());
     const [email, setEmail] = useState('');
+    const [emailVerified, setEmailVerified] = useState(false);
 
 
     const setProfileToPrivate = async() => {
@@ -37,6 +38,7 @@ export default function Settings(props) {
                 }
                 else {  
                     setEmail(_usr.email);
+                    setEmailVerified(_usr.emailVerified);
                 }
             });
         }
@@ -63,15 +65,28 @@ export default function Settings(props) {
         <div>
             <Container style={{textAlign: "center"}}>
                 <Paper style={{marginTop: '2rem', padding: '1rem'}}>
-                    <p style={{marginBottom: '2rem'}}>User id: {userInfo.uid}</p>
+                <Typography variant='h5' style={{marginBottom: '1rem'}}>User id is {userInfo.uid}</Typography>
+                    {
+                        emailVerified ?
+                        null :
+                        <Typography variant='body2' color='error'>Email not verified</Typography>
+                    }
+                    <div style={{marginTop: '2rem', marginBottom: '2rem'}}></div>
+                    {
+                        userInfo.private ?
+                        <Typography variant='body' color='secondary'>Profile is private</Typography> :
+                        <Typography variant='body' color='secondary'>Profile is public</Typography> 
 
-                    <Button style={{marginBottom: '2rem'}} variant='contained' color='secondary' onClick={props.goDarkFn}>Change theme</Button>
+                    }
                     <br></br>
                     {
                         userInfo.private ?
                         <Button variant='contained'  color='secondary' onClick={setProfileToPublic}>Set profile to public</Button> :
                         <Button color='secondary' variant='contained' onClick={setProfileToPrivate}>Set profile to private</Button>
                     }
+                    <br></br>
+                    <Button style={{marginTop: '2rem', marginTop: '2rem'}} variant='contained' color='secondary' onClick={props.goDarkFn}>Change theme</Button>
+
                 </Paper>
             </Container>
          
