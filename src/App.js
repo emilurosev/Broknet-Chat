@@ -12,6 +12,7 @@ import SearchedUser from './SearchedUser/SearchedUser';
 import { MuiThemeProvider, CssBaseline } from '@material-ui/core';
 import { theme } from './theme';
 import { themeDark } from './theme-dark';
+import Settings from './Settings/Settings';
 
 
 class App extends React.Component {
@@ -42,6 +43,7 @@ class App extends React.Component {
             <Route path='/profile' exact component={MyProfile}></Route>
             <Route path='/search' exact component={Search}></Route>
             <Route path='/user/:id' exact component={SearchedUser}></Route>
+            <Route path='/settings' render={(props) => <Settings {...props} goDarkFn={this.goDark} />}></Route>
           </Router>
           );
 

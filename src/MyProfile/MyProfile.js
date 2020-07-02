@@ -1,6 +1,6 @@
 import React from 'react';
-import Paper from '@material-ui/core/Paper'
-import { Typography, Button } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import { Typography, Button, Divider } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 
 const firebase = require('firebase');
@@ -141,15 +141,21 @@ class MyProfile extends React.Component {
                         <Typography color='primary' variant="body2">Email is verified!</Typography> :
                         <Typography color='error' variant='body2'>Email is NOT verified!</Typography>
                     }
-                    {
+                    {/*
                         this.state.userInfo.private ?
-                        <Button variant='contained' variant='outlined' style={{textTransform: 'none'}} color='secondary' onClick={this.setProfileToPublic}>Set profile to public</Button> :
+                        <Button variant='outlined' style={{textTransform: 'none'}} color='secondary' onClick={this.setProfileToPublic}>Set profile to public</Button> :
                         <Button color='secondary' variant='outlined' style={{textTransform: 'none'}} onClick={this.setProfileToPrivate}>Set profile to private</Button>
+                    */}
+                    <br></br>
+                    {
+                        this.state.photo === '' || this.state.photo == null ? 
+                        <p>No image</p> :
+                        <img style={{marginTop: '1rem'}} src={this.state.photo} alt='profile pic'></img>
+
                     }
                     <br></br>
-                    <img style={{marginTop: '1rem'}} src={this.state.photo} alt='profile pic'></img>
-                    <br></br>
-                    <hr></hr>
+                    <Divider light></Divider>
+
                     <p>Followers: </p>
                     { 
                         this.state.userInfo.followers !== undefined ?
@@ -176,7 +182,7 @@ class MyProfile extends React.Component {
                         }) :
                         null
                     }
-                    
+                
                 </Paper>
             </Container>
         </div>;

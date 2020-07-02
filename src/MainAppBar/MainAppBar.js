@@ -19,6 +19,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import AddCircle from '@material-ui/icons/AddCircle';
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const firebase = require('firebase');
 
@@ -151,6 +152,17 @@ export default class MainAppBar extends React.Component {
           {
             this.state.loggedIn ?
             <div>
+              <ListItem button component={Link} to='/settings'>
+                <ListItemIcon><SettingsIcon></SettingsIcon></ListItemIcon>
+                <ListItemText primary={'Settings'}></ListItemText>
+              </ListItem>
+              <Divider></Divider>
+            </div> :
+            null
+          }
+          {
+            this.state.loggedIn ?
+            <div>
               <ListItem button onClick={this.signOut}>
                 <ListItemIcon><Close></Close></ListItemIcon>
                 <ListItemText primary={'Log out'}></ListItemText>
@@ -176,7 +188,7 @@ export default class MainAppBar extends React.Component {
               BrokNet Social Network
             </Button>
             <div style={{flex: '1 1 auto'}}></div>
-            <Button color='inherit' className={classes.title} onClick={this.goDark} style={{textTransform: 'none'}}>Change theme</Button>
+            {/*<Button color='inherit' className={classes.title} onClick={this.goDark} style={{textTransform: 'none'}}>Change theme</Button>*/}
           </Toolbar>
         </AppBar>
         <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>
