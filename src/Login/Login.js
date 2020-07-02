@@ -128,7 +128,7 @@ class Login extends React.Component {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider).then(function(result) {
             var user = result.user;
-            const firstTimeLoggedInUser = firebase.firestore().collection('users').doc(user.email);
+            const firstTimeLoggedInUser = firebase.firestore().collection('users').doc(user.uid);
             firstTimeLoggedInUser.get().then(docSnapshot => {
                 if(!docSnapshot.exists) {
                     // this.setUserData(user);

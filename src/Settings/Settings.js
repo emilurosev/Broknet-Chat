@@ -74,8 +74,8 @@ export default function Settings(props) {
                     <div style={{marginTop: '2rem', marginBottom: '2rem'}}></div>
                     {
                         userInfo.private ?
-                        <Typography variant='body' color='secondary'>Profile is private</Typography> :
-                        <Typography variant='body' color='secondary'>Profile is public</Typography> 
+                        <Typography variant='body2' color='secondary'>Profile is private</Typography> :
+                        <Typography variant='body2' color='secondary'>Profile is public</Typography> 
 
                     }
                     <br></br>
@@ -85,7 +85,7 @@ export default function Settings(props) {
                         <Button color='secondary' variant='contained' onClick={setProfileToPrivate}>Set profile to private</Button>
                     }
                     <br></br>
-                    <Button style={{marginTop: '2rem', marginTop: '2rem'}} variant='contained' color='secondary' onClick={props.goDarkFn}>Change theme</Button>
+                    <Button style={{marginTop: '2rem'}} variant='contained' color='secondary' onClick={props.goDarkFn}>Change theme</Button>
 
                 </Paper>
             </Container>

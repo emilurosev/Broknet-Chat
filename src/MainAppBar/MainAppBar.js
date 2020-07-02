@@ -20,6 +20,7 @@ import AddCircle from '@material-ui/icons/AddCircle';
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
 import SettingsIcon from '@material-ui/icons/Settings';
+import CustomizedDialogs from './Notifications';
 
 const firebase = require('firebase');
 
@@ -189,6 +190,11 @@ export default class MainAppBar extends React.Component {
             </Button>
             <div style={{flex: '1 1 auto'}}></div>
             {/*<Button color='inherit' className={classes.title} onClick={this.goDark} style={{textTransform: 'none'}}>Change theme</Button>*/}
+            {
+              this.state.loggedIn ?
+              <CustomizedDialogs></CustomizedDialogs> :
+              null
+            }
           </Toolbar>
         </AppBar>
         <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>

@@ -149,11 +149,10 @@ class MyProfile extends React.Component {
                     <br></br>
                     {
                         this.state.photo === '' || this.state.photo == null ? 
-                        <p>No image</p> :
+                        null :
                         <img style={{marginTop: '1rem'}} src={this.state.photo} alt='profile pic'></img>
 
                     }
-                    <br></br>
                     <Divider light></Divider>
 
                     <p>Followers: </p>
