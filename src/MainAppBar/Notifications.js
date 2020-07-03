@@ -16,6 +16,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PersonIcon from '@material-ui/icons/Person';
 import { blue } from '@material-ui/core/colors';
 
+
 const firebase = require('firebase');
 
 
@@ -102,6 +103,54 @@ export default function CustomizedDialogs(props) {
 
   }
 
+  const getId = async(email) => {
+    let id;
+    await firebase.firestore().collection('users').get()
+        .then(querySnapshot => {
+            querySnapshot.docs.forEach(doc => {
+                let item = doc.data();
+                if(item.email === email) {
+                    id = item.uid;
+                }
+            });
+    });
+    return id;
+    
+  }
+
+  const acceptRequest = async(email2) => {
+    let uid = await getId(email);
+
+    await firebase.firestore().collection('users').doc(uid).update(
+        {
+            followRequests: firebase.firestore.FieldValue.arrayRemove(email2),
+            followers: firebase.firestore.FieldValue.arrayUnion(email2)
+        }
+    )
+    let id = await getId(email2);
+ 
+    await firebase.firestore().collection('users').doc(id).update({
+        following: firebase.firestore.FieldValue.arrayUnion(email)
+    });
+    getData();
+  }
+
+  const declineRequest = async(email2) => {
+    let uid = await getId(email);
+    await firebase.firestore().collection('users').doc(uid).update(
+        {
+            followRequests: firebase.firestore.FieldValue.arrayRemove(email2)
+        }
+    )
+    getData();
+    
+  }
+
+  const goToProfile = async(email2) => {
+    let id = await getId(email2);
+    props.history.push('/user/'+id);
+}
+
 
   const union = () => {
     check();
@@ -112,7 +161,7 @@ export default function CustomizedDialogs(props) {
   return (
     <div>
       <Button variant="contained" color="primary" onClick={union}>
-        Requests
+        Notifications
       </Button>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
@@ -130,14 +179,12 @@ export default function CustomizedDialogs(props) {
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={email} />
+                  <Button color='primary' onClick={() => acceptRequest(email)}>Accept</Button><Button color='secondary' onClick={() => declineRequest(email)}>Decline</Button>
                 </ListItem>
                 ))}
               </List> :
               <Typography gutterBottom>No requests</Typography>
-              
-
             }
-          
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">

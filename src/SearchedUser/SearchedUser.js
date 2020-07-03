@@ -99,7 +99,6 @@ class SearchedUser extends React.Component{
                         </div>
                         :
                         <div>
-                            
                                 {
                                     this.state.following ?
                                     null :
@@ -111,9 +110,6 @@ class SearchedUser extends React.Component{
                                         }
                                     </div>
                                 }
-                                
-            
-                            
                             <h2>{this.state.searchedUser.email}</h2>
                             <img alt='Profile pic' src={this.state.searchedUser.photoURL}></img>
                             <p>Total Investment: {this.state.totalUserInvestment}</p>

@@ -26,8 +26,8 @@ const firebase = require('firebase');
 
 export default class MainAppBar extends React.Component {
   
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       left: false,
       loggedIn: false

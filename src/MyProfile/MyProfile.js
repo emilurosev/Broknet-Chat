@@ -3,6 +3,16 @@ import Paper from '@material-ui/core/Paper';
 import { Typography, Button, Divider } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 
+import Avatar from '@material-ui/core/Avatar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import PersonIcon from '@material-ui/icons/Person';
+import { blue } from '@material-ui/core/colors';
+
+
+
 const firebase = require('firebase');
 
 class MyProfile extends React.Component {
@@ -155,33 +165,71 @@ class MyProfile extends React.Component {
                     }
                     <Divider light></Divider>
 
-                    <p>Followers: </p>
-                    { 
-                        this.state.userInfo.followers !== undefined ?
-                        this.state.userInfo.followers.map((item, index) => {
-                            return <div><Button key={index} style={{textTransform: 'none'}} variant='contained' color='primary' onClick={() => this.goToProfile(item)}>{item}</Button><br></br><Button color='secondary' onClick={() => this.removeFollower(item)}>Remove</Button><br></br></div>
-                        }) :
-                        null       
-                    }
-                    <br></br>
-                    <p>Following: </p>
-                    {
-                        this.state.userInfo.following !== undefined ?
-                        this.state.userInfo.following.map((item, index) => {
-                            return <div><Button key={index} style={{textTransform: 'none'}} variant='contained' color='primary' onClick={() => this.goToProfile(item)}>{item}</Button><br></br><Button color='secondary' onClick={() => this.removeFollowing(item)}>Remove</Button><br></br></div>
-                        }) :
-                        null       
-                    }
-                    <br></br>
-                    <p>New requests: </p>
-                    {  
-                        this.state.userInfo.followRequests !== undefined ?
-                        this.state.userInfo.followRequests.map((item, index) => {
-                            return <div><Button key={index} style={{textTransform: 'none'}} variant='contained' color='primary' onClick={() => this.goToProfile(item)}>{item}</Button><br></br><Button color='primary' onClick={() => this.acceptRequest(item)}>Accept</Button><Button color='secondary' onClick={() => this.declineRequest(item)}>Decline</Button><br></br></div>
-                        }) :
-                        null
-                    }
-                
+                    <List>
+
+                        <p>Followers: </p>
+                        {
+                            this.state.userInfo.followers != null && this.state.userInfo.followers.length > 0  ?
+                            <List>
+                                {this.state.userInfo.followers.map((email) => (
+                                <ListItem button key={email}>
+                                <ListItemAvatar>
+                                    <Avatar style={{backgroundColor: blue[100], color: blue[600]}}>
+                                        <PersonIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary={email} onClick={() => this.goToProfile(email)} />
+                                <Button color='secondary' onClick={() => this.removeFollower(email)}>Remove</Button>
+                                </ListItem>
+                                ))}
+                            </List> :
+                            <Typography gutterBottom>No followers</Typography>
+                        }
+                        
+                        <Divider light></Divider>
+
+                        <p>Following: </p>
+                        { 
+                            this.state.userInfo.following != null  && this.state.userInfo.following.length > 0 ?
+                            <List>
+                                {this.state.userInfo.following.map((email) => (
+                                <ListItem button key={email}>
+                                <ListItemAvatar>
+                                    <Avatar style={{backgroundColor: blue[100], color: blue[600]}}>
+                                        <PersonIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary={email} onClick={() => this.goToProfile(email)} />
+                                <Button color='secondary' onClick={() => this.removeFollowing(email)}>Remove</Button>
+                                </ListItem>
+                                ))}
+                            </List> :
+                            <Typography gutterBottom>No following</Typography>
+                            
+                        }
+                        
+                        <Divider light></Divider>
+
+
+                        <p>New requests: </p>
+                        {  
+                            this.state.userInfo.followRequests != null  && this.state.userInfo.followRequests.length > 0 ?
+                            <List>
+                                {this.state.userInfo.followRequests.map((email) => (
+                                <ListItem button key={email}>
+                                <ListItemAvatar>
+                                    <Avatar style={{backgroundColor: blue[100], color: blue[600]}}>
+                                        <PersonIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary={email} onClick={() => this.goToProfile(email)} />
+                                <Button color='primary' onClick={() => this.acceptRequest(email)}>Accept</Button><Button color='secondary' onClick={() => this.declineRequest(email)}>Decline</Button>
+                                </ListItem>
+                                ))}
+                            </List> :
+                            <Typography gutterBottom>No requests</Typography>     
+                        }
+                    </List>
                 </Paper>
             </Container>
         </div>;
