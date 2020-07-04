@@ -13,6 +13,7 @@ export default function Settings(props) {
     //const [user, loading, error] = useAuthState(firebase.auth());
     const [email, setEmail] = useState('');
     const [emailVerified, setEmailVerified] = useState(false);
+    const [uid, setUid] = useState(null);
 
 
     const setProfileToPrivate = async() => {
@@ -32,13 +33,14 @@ export default function Settings(props) {
     useEffect(() => {
         console.log('use effect 1');
         function check() {
-            return firebase.auth().onAuthStateChanged(_usr => {
+            return firebase.auth().onAuthStateChanged(async (_usr) => {
                 if(!_usr) {
                     props.history.push('/login');
                 }
                 else {  
                     setEmail(_usr.email);
                     setEmailVerified(_usr.emailVerified);
+                    setUid(_usr.uid);             
                 }
             });
         }
@@ -49,16 +51,19 @@ export default function Settings(props) {
     useEffect(() => {
         console.log('use effect 2')
         async function data() {
-            await firebase.firestore().collection('users').get().then(querySnapshot => {
-                querySnapshot.docs.forEach(doc => {
-                    if(doc.data().email === email) {
-                        setUserInfo(doc.data());
-                    }
-                });
-            });
+            const userRef = firebase.firestore().collection('users').doc(uid);
+            const doc = await userRef.get();
+            if (!doc.exists) {
+                console.log('No such document!');
+            } else {
+                console.log('Document data:', doc.data());
+                setUserInfo(doc.data());
+            }
         }
-        data();
-    }, [email]);
+        if(uid != null) {
+            data();
+        }
+    }, [uid]);
 
 
     return(

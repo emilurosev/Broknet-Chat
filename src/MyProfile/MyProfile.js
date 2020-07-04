@@ -24,26 +24,27 @@ class MyProfile extends React.Component {
             photo: "",
             emailVerified: false,
             private: false,
-            userInfo : []
+            userInfo : [],
+            uid: null
         };
     }
 
-    componentDidMount = async () => {
-        firebase.auth().onAuthStateChanged(async _usr => {
+    componentDidMount = () => {
+        firebase.auth().onAuthStateChanged(async (_usr) => {
             if(!_usr) {
                 this.props.history.push('/login');
             }
             else {  
-                this.setState({email: _usr.email, emailVerified: _usr.emailVerified, photo: _usr.photoURL});
+                this.setState({email: _usr.email, emailVerified: _usr.emailVerified, photo: _usr.photoURL, uid: _usr.uid});
+                const userRef = firebase.firestore().collection('users').doc(this.state.uid);
+                const doc = await userRef.get();
+                if (!doc.exists) {
+                    console.log('No such document!');
+                } else {
+                    console.log('Document data:', doc.data());
+                    this.setState({userInfo: doc.data()});
+                }
             }
-        });
-        await firebase.firestore().collection('users').get()
-            .then(querySnapshot => {
-                querySnapshot.docs.forEach(doc => {
-                    if(doc.data().email === this.state.email) {
-                        this.setState({userInfo: doc.data()})
-                    }
-                });
         });
 
     }

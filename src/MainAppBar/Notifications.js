@@ -15,6 +15,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import PersonIcon from '@material-ui/icons/Person';
 import { blue } from '@material-ui/core/colors';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 
 
 const firebase = require('firebase');
@@ -72,6 +74,8 @@ export default function CustomizedDialogs(props) {
   const [userInfo, setUserInfo] = useState([]);
   const [email, setEmail] = useState('');
   const [emailVerified, setEmailVerified] = useState(false);
+  const [uid, setUid] = useState(null);
+
   const classes = useStyles();
 
   const handleClickOpen = () => {
@@ -81,26 +85,28 @@ export default function CustomizedDialogs(props) {
     setOpen(false);
   };
 
-  
-
   const check = () => {
-    firebase.auth().onAuthStateChanged(_usr => {        
+    firebase.auth().onAuthStateChanged(async (_usr) => {        
       if(_usr) {  
           setEmail(_usr.email);
           setEmailVerified(_usr.emailVerified);
+          setUid(_usr.uid);
+          if(uid != null) {
+            await getData();
+          }
       }
     });
   }
 
   const getData = async() => {
-    await firebase.firestore().collection('users').get().then(querySnapshot => {
-      querySnapshot.docs.forEach(doc => {
-          if(doc.data().email === email) {
-              setUserInfo(doc.data());
-          }
-      });
-   });
-
+    const userRef = firebase.firestore().collection('users').doc(uid);
+    const doc = await userRef.get();
+    if (!doc.exists) {
+      console.log('No such document!');
+    } else {
+      console.log('Document data:', doc.data());
+      setUserInfo(doc.data());
+    }
   }
 
   const getId = async(email) => {
@@ -119,8 +125,6 @@ export default function CustomizedDialogs(props) {
   }
 
   const acceptRequest = async(email2) => {
-    let uid = await getId(email);
-
     await firebase.firestore().collection('users').doc(uid).update(
         {
             followRequests: firebase.firestore.FieldValue.arrayRemove(email2),
@@ -136,15 +140,20 @@ export default function CustomizedDialogs(props) {
   }
 
   const declineRequest = async(email2) => {
-    let uid = await getId(email);
     await firebase.firestore().collection('users').doc(uid).update(
         {
             followRequests: firebase.firestore.FieldValue.arrayRemove(email2)
         }
     )
-    getData();
-    
+    getData();  
   }
+
+  useEffect(() => {
+    function c() {
+      check();
+    }
+    c();
+  }, [])
 
   const goToProfile = async(email2) => {
     let id = await getId(email2);
@@ -154,22 +163,28 @@ export default function CustomizedDialogs(props) {
 
   const union = () => {
     check();
-    getData();
     handleClickOpen();
   }
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={union}>
-        Notifications
-      </Button>
+      {
+        userInfo.followRequests != null && userInfo.followRequests.length > 0 ?
+        <Button onClick={union} variant='contained' startIcon={<NotificationsActiveIcon/>}>
+          Notifications
+        </Button> :
+        <Button onClick={union} variant='contained' startIcon={<NotificationsIcon/>}>
+          Notifications
+        </Button>
+
+      }
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Follow requests
         </DialogTitle>
         <DialogContent dividers>
             {
-              userInfo.followers !== undefined ?
+              userInfo.followRequests != null && userInfo.followRequests.length > 0 ?
               <List>
                 {userInfo.followRequests.map((email) => (
                 <ListItem button key={email}>
@@ -183,7 +198,7 @@ export default function CustomizedDialogs(props) {
                 </ListItem>
                 ))}
               </List> :
-              <Typography gutterBottom>No requests</Typography>
+              <Typography gutterBottom>No active requests.</Typography>
             }
         </DialogContent>
         <DialogActions>

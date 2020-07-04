@@ -88,7 +88,7 @@ class Login extends React.Component {
         }
         firebase.auth().onAuthStateChanged(async _usr => {
             if(_usr) {
-                this.props.history.push('/dashboard');
+                this.props.history.push('/');
             }
         });
     }

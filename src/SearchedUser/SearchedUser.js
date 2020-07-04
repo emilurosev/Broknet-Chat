@@ -20,7 +20,8 @@ class SearchedUser extends React.Component{
             private: false,
             sent: false,
             following: false,
-            email: ''
+            email: '',
+            uid: null
 
         };
 
@@ -33,8 +34,11 @@ class SearchedUser extends React.Component{
             if(!_usr) {
                 this.props.history.push('/login');
             }
+            else if(_usr.uid === this.props.match.params.id) {
+                this.props.history.push('/profile');
+            }
             else {
-                this.setState({email: _usr.email});
+                this.setState({email: _usr.email, uid: _usr.uid});
             }
         });
         const userDoc = firebase.firestore().collection('users').doc(this.props.match.params.id);
@@ -111,7 +115,11 @@ class SearchedUser extends React.Component{
                                     </div>
                                 }
                             <h2>{this.state.searchedUser.email}</h2>
-                            <img alt='Profile pic' src={this.state.searchedUser.photoURL}></img>
+                            {
+                                this.state.searchedUser.photoURL != null && this.state.searchedUser.photoURL !== '' ?
+                                <img alt='Profile pic' src={this.state.searchedUser.photoURL}></img> :
+                                null
+                            }
                             <p>Total Investment: {this.state.totalUserInvestment}</p>
                             <p>Total Share Value: {this.state.totalShareValue}</p>
                             <p>Total Profit: {this.state.profit}</p>
