@@ -75,14 +75,20 @@ class Login extends React.Component {
         console.log(this.props.match.params.cred);
         if(this.props.match.params.cred){
 
-            const cred = JSON.parse(this.props.match.params.cred);
+            const uid = this.props.match.params.cred;
 
-            try {
+            firebase.firestore().doc(`users/${uid}`).get().then(res => {
+                const user = res.data();
+                const cred = JSON.parse(user.credential);
+                try {
                 
-                firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential(cred.oauthIdToken, cred.oauthAccessToken));
-            } catch (error) {
-                console.log(error);
-            }
+                    firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential(cred.oauthIdToken, cred.oauthAccessToken));
+                } catch (error) {
+                    console.log(error);
+                }
+            });
+
+            
           
 
         }
